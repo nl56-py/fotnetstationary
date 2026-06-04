@@ -27,18 +27,34 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoginPage = pathname === '/admin/login'
 
   useEffect(() => {
-    if (isLoginPage) { setLoading(false); return }
-    const checkAuth = async () => {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        router.push('/admin/login')
-      } else {
+    const supabase = createClient()
+    
+    // Set initial session
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
         setUser({ email: user.email })
-        setLoading(false)
+      } else {
+        setUser(null)
       }
+      setLoading(false)
+    })
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser({ email: session.user.email })
+      } else {
+        setUser(null)
+        if (!isLoginPage) {
+          router.push('/admin/login')
+        }
+      }
+      setLoading(false)
+    })
+
+    return () => {
+      subscription.unsubscribe()
     }
-    checkAuth()
   }, [router, isLoginPage])
 
   const handleLogout = async () => {

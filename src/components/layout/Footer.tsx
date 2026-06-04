@@ -23,7 +23,7 @@ export default function Footer() {
           <div className="container">
             <div className="col-md-10 col-md-offset-1 col-sm-12">
               <div className="footer-logo">
-                <img src="/images/logo.png" alt="Fonet Stationary Center" className="img-responsive" />
+                <img src="/images/fonet logo.PNG" alt="Fonet Stationary Center" className="img-responsive" />
               </div>
               <div className="bottom-area-border"></div>
             </div>
