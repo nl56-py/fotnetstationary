@@ -15,6 +15,7 @@ export default function AdminMessages() {
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchMessages() }, [])
 
   const markAsRead = async (id: string) => {

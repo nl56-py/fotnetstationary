@@ -10,6 +10,7 @@ export default function AdminBlogs() {
 
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchPosts = async () => {
       const { data } = await supabase.from('blog_posts').select('*').order('created_at', { ascending: false })

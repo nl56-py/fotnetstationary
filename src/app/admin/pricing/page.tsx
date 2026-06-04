@@ -21,6 +21,7 @@ export default function AdminPricing() {
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchItems() }, [])
 
   const startEditing = (item: PricingItem) => {

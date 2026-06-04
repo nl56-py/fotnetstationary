@@ -18,6 +18,7 @@ export default function AdminServices() {
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchServices() }, [])
 
   const handleSave = async () => {

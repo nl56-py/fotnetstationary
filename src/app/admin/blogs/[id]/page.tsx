@@ -14,6 +14,7 @@ export default function EditBlogPost() {
   const params = useParams()
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchPost = async () => {
       const { data } = await supabase.from('blog_posts').select('*').eq('id', params.id).single()

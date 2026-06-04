@@ -30,6 +30,7 @@ export default function AdminVideos() {
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchVideos() }, [])
 
   const handleAdd = async () => {

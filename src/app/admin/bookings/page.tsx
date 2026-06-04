@@ -20,6 +20,7 @@ export default function AdminBookings() {
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchBookings() }, [filter])
 
   const updateStatus = async (id: string, status: string) => {

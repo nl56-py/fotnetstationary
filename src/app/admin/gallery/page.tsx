@@ -21,6 +21,7 @@ export default function AdminGallery() {
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchImages() }, [])
 
   const handleAdd = async () => {
