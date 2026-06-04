@@ -2768,3 +2768,23 @@ ul { list-style: disc; }
     align-self: center;
   }
 }
+
+/* Tiptap Editor Styling */
+.ProseMirror {
+  min-height: 280px;
+  outline: none;
+  cursor: text;
+}
+.ProseMirror p {
+  margin-bottom: 12px;
+}
+.ProseMirror ul, .ProseMirror ol {
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+.ProseMirror ul {
+  list-style-type: disc;
+}
+.ProseMirror ol {
+  list-style-type: decimal;
+}
