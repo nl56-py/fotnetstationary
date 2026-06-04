@@ -170,33 +170,78 @@ ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE videos ENABLE ROW LEVEL SECURITY;
 
 -- Public read
+DROP POLICY IF EXISTS "public_read_settings" ON site_settings;
 CREATE POLICY "public_read_settings" ON site_settings FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "public_read_sliders" ON sliders;
 CREATE POLICY "public_read_sliders" ON sliders FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "public_read_services" ON services;
 CREATE POLICY "public_read_services" ON services FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "public_read_gallery" ON gallery_images;
 CREATE POLICY "public_read_gallery" ON gallery_images FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "public_read_pricing" ON pricing_items;
 CREATE POLICY "public_read_pricing" ON pricing_items FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "public_read_blogs" ON blog_posts;
 CREATE POLICY "public_read_blogs" ON blog_posts FOR SELECT USING (is_published = true);
+
+DROP POLICY IF EXISTS "public_read_testimonials" ON testimonials;
 CREATE POLICY "public_read_testimonials" ON testimonials FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "public_read_counters" ON counter_stats;
 CREATE POLICY "public_read_counters" ON counter_stats FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "public_read_team" ON team_members;
 CREATE POLICY "public_read_team" ON team_members FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "public_read_videos" ON videos;
 CREATE POLICY "public_read_videos" ON videos FOR SELECT USING (is_active = true);
 
 -- Public insert for forms
+DROP POLICY IF EXISTS "public_insert_bookings" ON bookings;
 CREATE POLICY "public_insert_bookings" ON bookings FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "public_insert_contact" ON contact_submissions;
 CREATE POLICY "public_insert_contact" ON contact_submissions FOR INSERT WITH CHECK (true);
 
 -- Admin full access
+DROP POLICY IF EXISTS "admin_all_settings" ON site_settings;
 CREATE POLICY "admin_all_settings" ON site_settings FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_sliders" ON sliders;
 CREATE POLICY "admin_all_sliders" ON sliders FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_services" ON services;
 CREATE POLICY "admin_all_services" ON services FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_gallery" ON gallery_images;
 CREATE POLICY "admin_all_gallery" ON gallery_images FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_pricing" ON pricing_items;
 CREATE POLICY "admin_all_pricing" ON pricing_items FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_blogs" ON blog_posts;
 CREATE POLICY "admin_all_blogs" ON blog_posts FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_bookings" ON bookings;
 CREATE POLICY "admin_all_bookings" ON bookings FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_contact" ON contact_submissions;
 CREATE POLICY "admin_all_contact" ON contact_submissions FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_testimonials" ON testimonials;
 CREATE POLICY "admin_all_testimonials" ON testimonials FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_counters" ON counter_stats;
 CREATE POLICY "admin_all_counters" ON counter_stats FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_team" ON team_members;
 CREATE POLICY "admin_all_team" ON team_members FOR ALL USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "admin_all_videos" ON videos;
 CREATE POLICY "admin_all_videos" ON videos FOR ALL USING (auth.role() = 'authenticated');
 
 -- ============================================
@@ -219,7 +264,8 @@ INSERT INTO site_settings (key, value) VALUES
 ('history_text', 'FCI was established in 2070 B.S. We have earned trust of people from all Chitwan and neighbor for quality and quick service. Fonet Stationary Center is Business Enterprise, is a registered and licensed business enterprise in the Business Service Centers that will operate a standard business services firm.'),
 ('mission_text', 'Our mission is to establish a standard business services center cum copy shop that will make available a wide range of services and products as it relates to the service offerings in the business center services industry at affordable prices to the customer and other locations.'),
 ('vision_text', 'Our vision is to build a business services center cum copy shop that will have active presence all over major locations.'),
-('copyright', '© 2024 Fonet Stationary Center. All Rights Reserved.');
+('copyright', '© 2024 Fonet Stationary Center. All Rights Reserved.')
+ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO services (title, slug, description, icon, sort_order) VALUES
 ('Thesis Typing', 'thesis-typing', 'Professional thesis typing with formatting and proofreading services for students.', 'fa fa-keyboard-o', 1),
@@ -238,53 +284,74 @@ INSERT INTO services (title, slug, description, icon, sort_order) VALUES
 ('PVC Card', 'pvc-card', 'PVC ID card printing for organizations and individuals.', 'fa fa-id-card', 14),
 ('Self Stamp', 'self-stamp', 'Custom self-inking stamp design and production.', 'fa fa-circle', 15),
 ('Ribbon Batch', 'ribbon-batch', 'Medal, ribbon, and batch printing for events.', 'fa fa-bookmark', 16),
-('Token of Love', 'token-of-love', 'Personalized gift items and token of love products.', 'fa fa-heart', 17);
+('Token of Love', 'token-of-love', 'Personalized gift items and token of love products.', 'fa fa-heart', 17)
+ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO pricing_items (sn, service_name, category, price, notes, sort_order) VALUES
-(1, 'Stationary Services', 'STATIONARY', '', '', 1),
-(2, 'Typing/Binding (Spiral+Ring)', 'STATIONARY', '', '', 2),
-(1, 'Photocopy', 'PRINT AND PHOTOCOPY', '', '', 3),
-(2, 'Print', 'PRINT AND PHOTOCOPY', '', '', 4),
-(3, 'Print Both Side', 'PRINT AND PHOTOCOPY', '', '', 5),
-(4, 'Print Both Side (0-200)', 'PRINT AND PHOTOCOPY', '', '', 6),
-(5, 'Print Both Side (200-500)', 'PRINT AND PHOTOCOPY', '', '', 7),
-(6, 'Print Both Side (500-1000)', 'PRINT AND PHOTOCOPY', '', '', 8),
-(7, 'Print Both Side (1000-2000)', 'PRINT AND PHOTOCOPY', '', '', 9),
-(8, 'Print Both Side (2000 and above)', 'PRINT AND PHOTOCOPY', '', '', 10),
-(9, 'Print Single Side', 'PRINT AND PHOTOCOPY', '', '', 11),
-(10, 'Print Single Side (0-200)', 'PRINT AND PHOTOCOPY', '', '', 12),
-(11, 'Print Single Side (200-500)', 'PRINT AND PHOTOCOPY', '', '', 13),
-(12, 'Print Single Side (500-1000)', 'PRINT AND PHOTOCOPY', '', '', 14),
-(13, 'Print Single Side (1000 and above)', 'PRINT AND PHOTOCOPY', '', '', 15),
-(1, 'Self Stamp', 'OTHERS', '', 'Price may change according to quantity', 16),
-(2, 'PVC ID Card Single Side', 'OTHERS', '', 'Price may change according to quantity', 17),
-(3, 'PVC ID Card Both Side', 'OTHERS', '', 'Price may change according to quantity', 18),
-(4, 'Ribbon Batch', 'OTHERS', '', '', 19),
-(5, 'Flex Print', 'OTHERS', '', '', 20),
-(6, 'Lamination', 'OTHERS', '', '', 21),
-(7, 'A3 Print/Scan', 'OTHERS', '', '', 22),
-(8, 'Cup Print/T-Shirt', 'OTHERS', '', '', 23),
-(9, 'T-Shirt Print', 'OTHERS', '', '', 24),
-(10, 'Token of Love/Batch/Medal', 'OTHERS', '', '', 25),
-(11, 'Sticker/Photo', 'OTHERS', '', '', 26),
-(12, 'Color Laser Print upto 12x18', 'OTHERS', '', '', 27),
-(13, 'Menu Design', 'OTHERS', '', '', 28),
-(14, 'Visiting Card', 'OTHERS', '', '', 29);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pricing_items) THEN
+    INSERT INTO pricing_items (sn, service_name, category, price, notes, sort_order) VALUES
+    (1, 'Stationary Services', 'STATIONARY', '', '', 1),
+    (2, 'Typing/Binding (Spiral+Ring)', 'STATIONARY', '', '', 2),
+    (1, 'Photocopy', 'PRINT AND PHOTOCOPY', '', '', 3),
+    (2, 'Print', 'PRINT AND PHOTOCOPY', '', '', 4),
+    (3, 'Print Both Side', 'PRINT AND PHOTOCOPY', '', '', 5),
+    (4, 'Print Both Side (0-200)', 'PRINT AND PHOTOCOPY', '', '', 6),
+    (5, 'Print Both Side (200-500)', 'PRINT AND PHOTOCOPY', '', '', 7),
+    (6, 'Print Both Side (500-1000)', 'PRINT AND PHOTOCOPY', '', '', 8),
+    (7, 'Print Both Side (1000-2000)', 'PRINT AND PHOTOCOPY', '', '', 9),
+    (8, 'Print Both Side (2000 and above)', 'PRINT AND PHOTOCOPY', '', '', 10),
+    (9, 'Print Single Side', 'PRINT AND PHOTOCOPY', '', '', 11),
+    (10, 'Print Single Side (0-200)', 'PRINT AND PHOTOCOPY', '', '', 12),
+    (11, 'Print Single Side (200-500)', 'PRINT AND PHOTOCOPY', '', '', 13),
+    (12, 'Print Single Side (500-1000)', 'PRINT AND PHOTOCOPY', '', '', 14),
+    (13, 'Print Single Side (1000 and above)', 'PRINT AND PHOTOCOPY', '', '', 15),
+    (1, 'Self Stamp', 'OTHERS', '', 'Price may change according to quantity', 16),
+    (2, 'PVC ID Card Single Side', 'OTHERS', '', 'Price may change according to quantity', 17),
+    (3, 'PVC ID Card Both Side', 'OTHERS', '', 'Price may change according to quantity', 18),
+    (4, 'Ribbon Batch', 'OTHERS', '', '', 19),
+    (5, 'Flex Print', 'OTHERS', '', '', 20),
+    (6, 'Lamination', 'OTHERS', '', '', 21),
+    (7, 'A3 Print/Scan', 'OTHERS', '', '', 22),
+    (8, 'Cup Print/T-Shirt', 'OTHERS', '', '', 23),
+    (9, 'T-Shirt Print', 'OTHERS', '', '', 24),
+    (10, 'Token of Love/Batch/Medal', 'OTHERS', '', '', 25),
+    (11, 'Sticker/Photo', 'OTHERS', '', '', 26),
+    (12, 'Color Laser Print upto 12x18', 'OTHERS', '', '', 27),
+    (13, 'Menu Design', 'OTHERS', '', '', 28),
+    (14, 'Visiting Card', 'OTHERS', '', '', 29);
+  END IF;
+END $$;
 
-INSERT INTO counter_stats (title, count, icon, sort_order) VALUES
-('Happy Customers', 5000, 'fa fa-smile-o', 1),
-('Projects Completed', 12000, 'fa fa-check-circle', 2),
-('Years Experience', 10, 'fa fa-calendar', 3),
-('Services Offered', 17, 'fa fa-cogs', 4);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM counter_stats) THEN
+    INSERT INTO counter_stats (title, count, icon, sort_order) VALUES
+    ('Happy Customers', 5000, 'fa fa-smile-o', 1),
+    ('Projects Completed', 12000, 'fa fa-check-circle', 2),
+    ('Years Experience', 10, 'fa fa-calendar', 3),
+    ('Services Offered', 17, 'fa fa-cogs', 4);
+  END IF;
+END $$;
 
-INSERT INTO team_members (name, position, sort_order) VALUES
-('Shubarna Neupane', 'Managing Director', 1),
-('Ranjana Poudel Neupane', 'Co-Manager', 2),
-('Tapesh Mahato', 'Operations', 3);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM team_members) THEN
+    INSERT INTO team_members (name, position, sort_order) VALUES
+    ('Shubarna Neupane', 'Managing Director', 1),
+    ('Ranjana Poudel Neupane', 'Co-Manager', 2),
+    ('Tapesh Mahato', 'Operations', 3);
+  END IF;
+END $$;
 
-INSERT INTO testimonials (name, designation, content, sort_order) VALUES
-('Satisfied Customer', 'Student', 'Fonet Stationary Center provides excellent thesis typing and printing services. Their quality and quick turnaround time is unmatched in Chitwan. Highly recommended for all students!', 1),
-('Business Client', 'Entrepreneur', 'We have been using FCI for all our business printing needs including visiting cards, flex prints, and document services. Professional service at affordable prices.', 2);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM testimonials) THEN
+    INSERT INTO testimonials (name, designation, content, sort_order) VALUES
+    ('Satisfied Customer', 'Student', 'Fonet Stationary Center provides excellent thesis typing and printing services. Their quality and quick turnaround time is unmatched in Chitwan. Highly recommended for all students!', 1),
+    ('Business Client', 'Entrepreneur', 'We have been using FCI for all our business printing needs including visiting cards, flex prints, and document services. Professional service at affordable prices.', 2);
+  END IF;
+END $$;
 
 -- ============================================
 -- Admin Users (synced from auth.users)
@@ -297,7 +364,10 @@ CREATE TABLE IF NOT EXISTS admin_users (
 
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "public_read_admin_users" ON admin_users;
 CREATE POLICY "public_read_admin_users" ON admin_users FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "admin_all_admin_users" ON admin_users;
 CREATE POLICY "admin_all_admin_users" ON admin_users FOR ALL USING (auth.role() = 'authenticated');
 
 -- Trigger to automatically create admin_user on auth.users signup
@@ -310,7 +380,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE OR REPLACE TRIGGER on_auth_user_created
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
