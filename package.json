@@ -16,7 +16,7 @@
     "@tiptap/extension-placeholder": "^2.11.2",
     "@tiptap/react": "^2.11.2",
     "@tiptap/starter-kit": "^2.11.2",
-    "next": "15.3.3",
+    "next": "15.5.7",
     "react": "^19.0.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
@@ -27,7 +27,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "15.3.3",
+    "eslint-config-next": "15.5.7",
     "typescript": "^5.0.0"
   }
 }

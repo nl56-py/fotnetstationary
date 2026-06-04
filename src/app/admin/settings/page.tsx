@@ -25,10 +25,10 @@ export default function AdminSettings() {
 
   const supabase = createClient()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchSettings = async () => {
-      const { data } = await supabase.from('site_settings').select('*').order('key')
+      const sb = createClient()
+      const { data } = await sb.from('site_settings').select('*').order('key')
       setSettings(data || [])
       setLoading(false)
     }

@@ -14,10 +14,10 @@ export default function EditBlogPost() {
   const params = useParams()
   const supabase = createClient()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchPost = async () => {
-      const { data } = await supabase.from('blog_posts').select('*').eq('id', params.id).single()
+      const sb = createClient()
+      const { data } = await sb.from('blog_posts').select('*').eq('id', params.id).single()
       if (data) {
         setForm({
           title: data.title, slug: data.slug, excerpt: data.excerpt || '',
