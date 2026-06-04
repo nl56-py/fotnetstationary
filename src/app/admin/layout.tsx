@@ -1,8 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { useAuth } from '@/context/AuthContext'
 
 const sidebarItems = [
   { label: 'Dashboard', icon: 'fa fa-dashboard', href: '/admin' },
@@ -17,8 +17,7 @@ const sidebarItems = [
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<{ email?: string } | null>(null)
+  const { user, loading, signOut } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const router = useRouter()
   const pathname = usePathname()
@@ -27,44 +26,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoginPage = pathname === '/admin/login'
 
   useEffect(() => {
-    const supabase = createClient()
-    
-    // Set initial session
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        setUser({ email: user.email })
-      } else {
-        setUser(null)
-      }
-      setLoading(false)
-    })
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
-        setUser({ email: session.user.email })
-      } else {
-        setUser(null)
-        if (!isLoginPage) {
-          router.push('/admin/login')
-        }
-      }
-      setLoading(false)
-    })
-
-    return () => {
-      subscription.unsubscribe()
+    if (!loading && !user && !isLoginPage) {
+      router.push('/admin/login')
     }
-  }, [router, isLoginPage])
+  }, [user, loading, isLoginPage, router])
 
   const handleLogout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await signOut()
     router.push('/admin/login')
   }
 
   if (isLoginPage) return <>{children}</>
-  if (loading) return (
+  if (loading || !user) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a2e' }}>
       <div className="spinner"></div>
     </div>

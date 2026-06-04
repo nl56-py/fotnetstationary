@@ -43,7 +43,7 @@ export default function CounterSection() {
           observer.disconnect()
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
@@ -59,12 +59,12 @@ export default function CounterSection() {
               <div key={idx} className="col-md-3 col-sm-6 col-xs-12 couneter-box">
                 <div className="cd-single">
                   <div className="count-box">
-                    <div className="Col-xl-5 col-md-5 col-sm-5 col-xs-12 pd-0">
+                    <div className="col-xl-5 col-md-5 col-sm-5 col-xs-12 pd-0">
                       <div className="cd-icon">
                         <i className={`${stat.icon} fill-gradient-icon`}></i>
                       </div>
                     </div>
-                    <div className="Col-xl-7 col-md-7 col-sm-7 col-xs-12 pd-0">
+                    <div className="col-xl-7 col-md-7 col-sm-7 col-xs-12 pd-0">
                       <div className="cd-num inner-area-title">
                         <Counter target={stat.count} started={started} />
                       </div>

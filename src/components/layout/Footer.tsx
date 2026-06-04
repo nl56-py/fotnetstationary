@@ -21,18 +21,14 @@ export default function Footer() {
         <div className="footer-overlay"></div>
         <div className="top-area">
           <div className="container">
-            <div className="col-md-10 col-md-offset-1 col-sm-12">
-              <div className="footer-logo">
-                <img src="/images/fonet logo.PNG" alt="Fonet Stationary Center" className="img-responsive" />
-              </div>
-              <div className="bottom-area-border"></div>
-            </div>
-            <div className="clearfix"></div>
             <div className="footer-block">
               <div className="row row-eq-height">
                 {/* Column 1: About FCI */}
                 <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12 s-footer">
                   <div className="single-footer">
+                    <div className="footer-logo-inline" style={{ marginBottom: '15px' }}>
+                      <img src="/images/fonet logo.PNG" alt="Fonet Stationary Center" style={{ maxHeight: '55px', width: 'auto', display: 'block' }} />
+                    </div>
                     <h3>About FCI</h3>
                     <p>
                       Fonet Stationary Center (FCI) is located at Bharatpur, in front of Saptagandaki Campus.

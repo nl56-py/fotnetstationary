@@ -285,3 +285,32 @@ INSERT INTO team_members (name, position, sort_order) VALUES
 INSERT INTO testimonials (name, designation, content, sort_order) VALUES
 ('Satisfied Customer', 'Student', 'Fonet Stationary Center provides excellent thesis typing and printing services. Their quality and quick turnaround time is unmatched in Chitwan. Highly recommended for all students!', 1),
 ('Business Client', 'Entrepreneur', 'We have been using FCI for all our business printing needs including visiting cards, flex prints, and document services. Professional service at affordable prices.', 2);
+
+-- ============================================
+-- Admin Users (synced from auth.users)
+-- ============================================
+CREATE TABLE IF NOT EXISTS admin_users (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "public_read_admin_users" ON admin_users FOR SELECT USING (true);
+CREATE POLICY "admin_all_admin_users" ON admin_users FOR ALL USING (auth.role() = 'authenticated');
+
+-- Trigger to automatically create admin_user on auth.users signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.admin_users (id, email)
+  VALUES (new.id, new.email);
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
