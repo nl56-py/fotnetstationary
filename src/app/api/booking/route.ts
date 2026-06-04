@@ -11,11 +11,14 @@ export async function POST(request: Request) {
 
     // If Supabase is configured, insert into database
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    let supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (!supabaseKey || supabaseKey === 'your_supabase_service_role_key') {
+      supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    }
 
     if (supabaseUrl && supabaseKey && supabaseUrl !== 'your_supabase_project_url') {
-      const { createAdminClient } = await import('@/lib/supabase/admin')
-      const supabase = createAdminClient()
+      const { createClient } = await import('@supabase/supabase-js')
+      const supabase = createClient(supabaseUrl, supabaseKey)
       const { error } = await supabase.from('bookings').insert({
         customer_name,
         customer_email: customer_email || null,
