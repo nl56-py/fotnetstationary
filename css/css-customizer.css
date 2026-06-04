@@ -1,0 +1,291 @@
+
+/*--- slider control ----*/
+.slider-custom-control input[type=number]::-webkit-inner-spin-button,
+.slider-custom-control input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.slider-custom-control input[type=number] {
+    -moz-appearance: textfield;
+}
+.slider-custom-control input[type=number] {
+    width: 50px;
+    border-radius: 2px;
+    margin-left: 5px;
+}
+.slider-custom-control .slider {
+    width: 58%;
+    float: left;
+    margin: 15px 0 12px;
+}
+.slider-custom-control .slider-reset, .reset-button  {
+    cursor: pointer;
+    margin-left: 5px;
+    padding: 5px 8px;
+    display: inline-block;
+    color: #0073aa;
+    border: 1px solid #0073aa;
+    font-size: 11px;
+    border-radius: 2px;
+    height: 18px;
+    position: relative;
+    top: -1px;
+}
+.slider-custom-control .slider-value {
+    border: none;
+    text-align: right;
+    width: 50px;
+    margin-right: 5px;
+}
+.slider-custom-control .slider-value,
+.slider-custom-control .slider-unit {
+    float: right;
+}
+.slider-custom-control .ui-widget.ui-widget-content {
+    background: #ccc;
+}
+.slider-custom-control .ui-widget-content {
+    background: #f4f4f4 none repeat scroll 0 0;
+    color: #333;
+}
+.slider-custom-control .ui-slider-horizontal {
+    height: 3px;
+}
+.slider-custom-control .ui-slider {
+    position: relative;
+    text-align: left;
+}
+.slider-custom-control .ui-state-default,
+.slider-custom-control .ui-widget-content .ui-state-default,
+.slider-custom-control .ui-widget-header .ui-state-default,
+.slider-custom-control .ui-button,
+.slider-custom-control .ui-button.ui-state-disabled:hover,
+.slider-custom-control .ui-button.ui-state-disabled:active {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #aaa;
+    font-weight: normal;
+}
+.slider-custom-control .ui-slider-horizontal .ui-slider-handle {
+    margin-left: -7px;
+    top: -8px;
+    border-radius: 50%;
+}
+.slider-custom-control .ui-slider .ui-slider-handle {
+    cursor: pointer;
+    height: 17px;
+    position: absolute;
+    width: 17px;
+    z-index: 2;
+}
+.slider-custom-control .dashicons-image-rotate {
+    margin-top: 10px;
+    color: #d4d4d4;
+    size: 16px;
+}
+.slider-custom-control .dashicons-image-rotate:hover {
+    color: #a7a7a7;
+}
+
+.customize-reset-title {
+    font-size: 14px;
+    line-height: 1.75;
+    font-weight: 600;
+}
+.modal {
+  display: none;
+  position: fixed; 
+  z-index: 99; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 25%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-content p {
+    font-size: 18px;
+    margin: 25px 0 16px;
+}
+.modal-content .refresh-btn {
+    font-size: 15px;
+    background: #2271b1;
+    padding: 8px 15px;
+    border-radius: 4px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+}
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover, .close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/*---- Toggle button -----*/
+.toggle-switch-control .customize-control-title {
+    display: inline-block;
+}
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    float: right;
+}
+.toggle-switch .toggle-switch-checkbox {
+    display: none;
+}
+.toggle-switch .toggle-switch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+ /*   border: 2px solid #000;*/
+    height: 18px;
+}
+.toggle-switch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.toggle-switch-inner:before,
+.toggle-switch-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 22px;
+    padding: 0;
+    line-height: 2;
+    font-size: 10px;
+    color: #fff;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+.toggle-switch-inner:before {
+    content: "ON";
+    padding-left: 5px;
+    background-color: #000;
+    color: #fff;
+}
+.toggle-switch-inner:after {
+    content: "OFF";
+    padding-right: 5px;
+    background-color: #eee;
+    color: #000;
+    text-align: right;
+}
+.toggle-switch-btn {
+    display: block;
+    width: 16px;
+    margin: 3px;
+    background: #000;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 28px;
+    transition: all 0.3s ease-in 0s;
+}
+.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-inner {
+    margin-left: 0;
+}
+.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-btn {
+    right: 0px;
+    background: #fff;
+}
+
+// customizer colors styles
+.customize-control-color .customize-control-title {
+    display: inline-block;
+}
+span.wp-color-result-text {
+    display: none;
+}
+.customize-control-color {
+    position: relative;
+}
+.wp-picker-container {
+    display:inline-block;
+}
+
+span.customize-control-title {
+    width: 72%;
+}
+button.button.wp-color-result {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 0;
+}
+.customize-control-switch span.customize-control-title {
+    /* width: 72%; */
+    display: inline-block;
+}
+.customize-control-switch .onoffswitch{
+    position: relative;
+    width: 65px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    float: right;
+    margin: 0;
+}
+
+
+
+.wp-picker-holder {
+    position: relative;
+    z-index: 2;
+}
+
+li#customize-control-soccerclub_about_button_display span.customize-inside-control-row {
+    display: inline-block;
+    width: 35%;
+}
+
+li.customize-control-select{
+	display: inline-block;
+}
+
+
+li#customize-control-service_npp_count label,
+li#customize-control-luzuk_features_npp_count label,
+li#customize-control-luzuk_skill_npp_count label
+{
+	width: 80%;
+	display:inline-block;
+}
+
+li#customize-control-service_npp_count select,
+li#customize-control-luzuk_features_npp_count select,
+li#customize-control-luzuk_skill_npp_count select
+{
+	 position: absolute;
+    right: 0;
+    width: 20%;   
+
+}

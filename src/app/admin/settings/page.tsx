@@ -1,0 +1,94 @@
+'use client'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import type { SiteSetting } from '@/lib/types'
+
+const settingGroups = [
+  {
+    title: 'Business Information',
+    keys: ['site_name', 'site_tagline', 'phone', 'mobile', 'email', 'fax', 'address', 'working_hours'],
+  },
+  {
+    title: 'Social Media',
+    keys: ['facebook', 'youtube', 'twitter', 'instagram'],
+  },
+  {
+    title: 'Content',
+    keys: ['about_text', 'history_text', 'mission_text', 'vision_text', 'copyright'],
+  },
+]
+
+export default function AdminSettings() {
+  const [settings, setSettings] = useState<SiteSetting[]>([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  const supabase = createClient()
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data } = await supabase.from('site_settings').select('*').order('key')
+      setSettings(data || [])
+      setLoading(false)
+    }
+    fetchSettings()
+  }, [])
+
+  const updateSetting = (key: string, value: string) => {
+    setSettings(settings.map(s => s.key === key ? { ...s, value } : s))
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    for (const setting of settings) {
+      await supabase.from('site_settings').update({ value: setting.value, updated_at: new Date().toISOString() }).eq('id', setting.id)
+    }
+    setSaving(false)
+    alert('Settings saved successfully!')
+  }
+
+  if (loading) return <div className="loading-spinner"><div className="spinner"></div></div>
+
+  const formatLabel = (key: string) => key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 20 }}>
+        <button onClick={handleSave} disabled={saving}
+          style={{ padding: '10px 25px', background: '#3347B0', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>
+          <i className="fa fa-save" style={{ marginRight: 8 }}></i>
+          {saving ? 'Saving...' : 'Save All Changes'}
+        </button>
+      </div>
+
+      {settingGroups.map(group => (
+        <div key={group.title} style={{ background: '#fff', borderRadius: 12, padding: 25, marginBottom: 20, boxShadow: '0 2px 10px rgba(0,0,0,0.06)' }}>
+          <h3 style={{ fontSize: 16, color: '#222', fontFamily: "'Oswald', sans-serif", marginBottom: 20, paddingBottom: 10, borderBottom: '1px solid #f0f0f0' }}>
+            {group.title}
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+            {group.keys.map(key => {
+              const setting = settings.find(s => s.key === key)
+              if (!setting) return null
+              const isLong = ['about_text', 'history_text', 'mission_text', 'vision_text'].includes(key)
+              return (
+                <div key={key} style={{ gridColumn: isLong ? 'span 2' : 'span 1' }}>
+                  <label style={{ display: 'block', fontSize: 13, color: '#666', marginBottom: 6, fontWeight: 500 }}>
+                    {formatLabel(key)}
+                  </label>
+                  {isLong ? (
+                    <textarea value={setting.value || ''} onChange={e => updateSetting(key, e.target.value)}
+                      style={{ width: '100%', padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, height: 100, resize: 'vertical', boxSizing: 'border-box' }} />
+                  ) : (
+                    <input value={setting.value || ''} onChange={e => updateSetting(key, e.target.value)}
+                      style={{ width: '100%', padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }} />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}

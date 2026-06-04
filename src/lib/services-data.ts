@@ -1,0 +1,313 @@
+export interface ServiceData {
+  slug: string
+  title: string
+  icon: string
+  image: string
+  shortDesc: string
+  longDesc: string
+  features: string[]
+}
+
+export const services: ServiceData[] = [
+  {
+    slug: 'thesis-typing',
+    title: 'Thesis Typing',
+    icon: 'fa fa-keyboard-o',
+    image: '/images/service-thesis-typing.jpg',
+    shortDesc: 'Professional thesis typing with formatting and proofreading services for students.',
+    longDesc: 'When you need to type up a thesis, this can get complicated. Everything has to fall in place just right, the format has to be correct and there are many other details that can\'t be missed either. If you are having trouble coming up with what you need to for your thesis paper, you can reach out for professional Fonet Stationary Center from our team. We know that these are difficult to type which is why we have professionals on hand who have typed many of them up before and we can do the same for you as well.',
+    features: [
+      'High-quality results with 99% accuracy',
+      'Additional research on demand',
+      'Done within 12 hours if needed',
+      'Affordable prices for students',
+      'Expert editing and proofreading included',
+      'Correct academic format and structure',
+    ],
+  },
+  {
+    slug: 'photocopy-center',
+    title: 'Best Photocopy',
+    icon: 'fa fa-copy',
+    image: '/images/service-photocopy.jpg',
+    shortDesc: 'High-quality photocopying services up to A0 size, black and white and color.',
+    longDesc: 'We have a wide range of photocopy services including black & white and color copying. Our state-of-the-art equipment ensures crisp, clear copies every time. Whether you need a single page or thousands, we handle orders of any size with speed and precision. Our pricing is competitive and volume discounts are available.',
+    features: [
+      'Black & white and color photocopying',
+      'Sizes from A4 up to A0',
+      'Single-sided and double-sided copies',
+      'High-speed bulk copying',
+      'Volume discounts available',
+      'Collating and stapling services',
+    ],
+  },
+  {
+    slug: 'tshirt-print',
+    title: 'T-Shirt Print',
+    icon: 'fa fa-tags',
+    image: '/images/service-tshirt-print.jpg',
+    shortDesc: 'Custom T-shirt printing with your own designs, logos, and artwork.',
+    longDesc: 'Create custom T-shirts with your own designs, logos, and artwork. Whether it\'s for a team event, corporate branding, school uniforms, or personal expression, our T-shirt printing service delivers vibrant, long-lasting prints on quality fabric. We use modern printing techniques to ensure your designs look professional and withstand repeated washing.',
+    features: [
+      'Custom designs and logos',
+      'High-quality durable prints',
+      'Single piece or bulk orders',
+      'Multiple fabric colors available',
+      'Corporate branding solutions',
+      'Quick turnaround time',
+    ],
+  },
+  {
+    slug: 'cup-plate-print',
+    title: 'Cup/Plate Print',
+    icon: 'fa fa-coffee',
+    image: '/images/service-cup-print.jpg',
+    shortDesc: 'Personalized cup and plate printing for gifts, events, and corporate branding.',
+    longDesc: 'Make your events and gifts truly special with our personalized cup and plate printing service. Perfect for corporate gifts, wedding favors, birthday celebrations, and promotional merchandise. We print high-quality, full-color designs that are durable and dishwasher safe. From single custom pieces to large bulk orders, we deliver excellence.',
+    features: [
+      'Full-color personalized printing',
+      'Perfect for corporate gifts and events',
+      'Wedding and birthday customization',
+      'Durable and long-lasting prints',
+      'Single piece or bulk orders',
+      'Various cup and plate sizes',
+    ],
+  },
+  {
+    slug: 'photo-stickers',
+    title: 'Photo & Stickers',
+    icon: 'fa fa-camera',
+    image: '/images/sticker-printing-service.jpg',
+    shortDesc: 'High-quality photo printing and custom sticker production for any purpose.',
+    longDesc: 'From passport photos to large format prints, our photo printing service delivers exceptional quality. We also offer custom sticker printing for branding, labeling, product packaging, and decorative purposes. Our stickers are available in various materials including vinyl, paper, and transparent options, all cut to your exact specifications.',
+    features: [
+      'Passport and ID photos',
+      'Large format photo prints',
+      'Custom sticker design and cutting',
+      'Vinyl, paper, and transparent options',
+      'Waterproof sticker materials',
+      'Die-cut and kiss-cut stickers',
+    ],
+  },
+  {
+    slug: 'flex-print',
+    title: 'Flex Print',
+    icon: 'fa fa-picture-o',
+    image: '/images/service-flex-print.jpg',
+    shortDesc: 'Large format flex banner printing for advertisements, events, and promotions.',
+    longDesc: 'Make a big impression with our large format flex banner printing service. Ideal for outdoor advertising, event backdrops, shop signage, promotional banners, and trade show displays. We use high-quality flex materials and vibrant inks that withstand weather conditions while maintaining brilliant colors for extended periods.',
+    features: [
+      'Large format banner printing',
+      'Weather-resistant materials',
+      'Vibrant and durable inks',
+      'Indoor and outdoor banners',
+      'Custom sizes available',
+      'Grommets and finishing included',
+    ],
+  },
+  {
+    slug: 'lamination',
+    title: 'Lamination',
+    icon: 'fa fa-shield',
+    image: '/images/lamination.webp',
+    shortDesc: 'Document and photo lamination in various sizes for protection and durability.',
+    longDesc: 'Protect your important documents, photos, certificates, and ID cards with our professional lamination service. We offer both hot and cold lamination in matte and glossy finishes. Available in sizes from ID card to A0, our lamination service adds durability and a professional finish to your materials while protecting them from water, dirt, and wear.',
+    features: [
+      'Hot and cold lamination options',
+      'Matte and glossy finishes',
+      'Sizes from ID card to A0',
+      'Document and certificate protection',
+      'Photo lamination services',
+      'Tear and water resistant',
+    ],
+  },
+  {
+    slug: 'visiting-card',
+    title: 'Visiting Card',
+    icon: 'fa fa-address-card-o',
+    image: '/images/service-visiting-card.jpg',
+    shortDesc: 'Professional visiting card design and printing services for individuals and businesses.',
+    longDesc: 'Make a lasting first impression with our professionally designed and printed visiting cards. We offer a wide range of paper stocks, finishes, and design options to create cards that truly represent your brand. From simple single-sided cards to premium textured double-sided designs, we deliver quality that speaks volumes about your professionalism.',
+    features: [
+      'Custom design services available',
+      'Multiple paper stock options',
+      'Matte, glossy, and textured finishes',
+      'Single and double-sided printing',
+      'Spot UV and embossing options',
+      'Fast turnaround on bulk orders',
+    ],
+  },
+  {
+    slug: 'pvc-card',
+    title: 'PVC Card',
+    icon: 'fa fa-id-card',
+    image: '/images/service-pvc-card.jpg',
+    shortDesc: 'PVC ID card printing for organizations, schools, and individuals.',
+    longDesc: 'Professional PVC ID card printing for organizations, schools, colleges, and corporate offices. Our PVC cards are durable, water-resistant, and feature high-quality full-color printing. We offer both single-sided and double-sided printing with options for barcodes, QR codes, and photo integration for complete identification solutions.',
+    features: [
+      'Durable PVC material',
+      'Full-color printing both sides',
+      'Photo integration',
+      'Barcode and QR code support',
+      'Bulk order discounts available',
+      'Custom design included',
+    ],
+  },
+  {
+    slug: 'self-stamp',
+    title: 'Self Stamp',
+    icon: 'fa fa-circle',
+    image: '/images/self stamp.jpg',
+    shortDesc: 'Custom self-inking stamp design and production for business and personal use.',
+    longDesc: 'Create professional custom self-inking stamps for your business, organization, or personal use. Our self-inking stamps deliver crisp, clean impressions every time without the need for a separate ink pad. Available in various sizes and shapes, they\'re perfect for office use, document authentication, address stamps, and more.',
+    features: [
+      'Custom design and text',
+      'Self-inking mechanism',
+      'Various sizes and shapes',
+      'Thousands of impressions per refill',
+      'Quick turnaround time',
+      'Replacement ink pads available',
+    ],
+  },
+  {
+    slug: 'color-print',
+    title: 'Color Laser Print',
+    icon: 'fa fa-print',
+    image: '/images/service-color-print.jpg',
+    shortDesc: 'High-quality color laser printing up to 12×18 size for all your printing needs.',
+    longDesc: 'Our color laser printing service delivers stunning, vibrant prints for all your needs. From presentations and reports to marketing materials and certificates, we produce sharp, professional-quality color prints up to 12×18 size. Our advanced laser technology ensures consistent color accuracy across every page, whether you need one copy or thousands.',
+    features: [
+      'Vibrant color laser printing',
+      'Sizes up to 12×18 inches',
+      'Consistent color accuracy',
+      'Suitable for presentations and reports',
+      'Marketing materials and brochures',
+      'Volume pricing available',
+    ],
+  },
+  {
+    slug: 'ribbon-batch',
+    title: 'Ribbon Batch',
+    icon: 'fa fa-bookmark',
+    image: '/images/servicesimg.jpg',
+    shortDesc: 'Medal, ribbon, and batch printing for events, schools, and organizations.',
+    longDesc: 'Celebrate achievements and mark special occasions with our ribbon, batch, and medal printing service. Perfect for school events, corporate awards, sports tournaments, and organizational ceremonies. We create high-quality custom ribbons and batches with your text, logos, and designs for a truly memorable presentation.',
+    features: [
+      'Custom ribbon printing',
+      'Medal and batch production',
+      'School and corporate events',
+      'Sports tournament awards',
+      'Custom text and logo printing',
+      'Various colors and sizes',
+    ],
+  },
+  {
+    slug: 'token-of-love',
+    title: 'Token of Love',
+    icon: 'fa fa-heart',
+    image: '/images/servicesimg.jpg',
+    shortDesc: 'Personalized gift items and token of love products for special occasions.',
+    longDesc: 'Express your feelings with our personalized Token of Love gift items. Perfect for birthdays, anniversaries, Valentine\'s Day, and other special occasions. We offer a range of customizable gift products including photo frames, keychains, mugs, cushions, and more — all with your personal touch to make your loved ones feel truly special.',
+    features: [
+      'Personalized photo gifts',
+      'Custom keychains and magnets',
+      'Photo frame customization',
+      'Birthday and anniversary specials',
+      'Gift wrapping available',
+      'Bulk orders for events',
+    ],
+  },
+  {
+    slug: 'general-typing',
+    title: 'General Typing',
+    icon: 'fa fa-file-text-o',
+    image: '/images/service-thesis-typing.jpg',
+    shortDesc: 'Accurate typing services for manuscripts, documents, forms, and all kinds of content.',
+    longDesc: 'Our typists are able to help with all forms of documents from business plans through to the creation of forms and templates for your business. All typing is done according to your own specific requirements at all times. Whether it is a simple PDF or Excel file or a 100-page handwritten manuscript, our typists will make sure in the end you have a perfectly formatted and proofread document.',
+    features: [
+      'Manuscripts and books typing',
+      'Form creation and fillable PDFs',
+      'Business documents and reports',
+      'Legal document typing',
+      'Excel spreadsheets and presentations',
+      'Handwritten document conversion',
+    ],
+  },
+  {
+    slug: 'stationary',
+    title: 'Stationary',
+    icon: 'fa fa-pencil',
+    image: '/images/servicesimg.jpg',
+    shortDesc: 'Complete range of stationary items for office, school, and personal needs.',
+    longDesc: 'Browse our complete collection of stationary items for all your office and school needs. From pens, pencils, and notebooks to filing supplies, desk accessories, and presentation materials — we stock a comprehensive range of quality stationary products at competitive prices. Visit our center for all your stationary requirements.',
+    features: [
+      'Office supplies and accessories',
+      'School stationary items',
+      'Writing instruments',
+      'Filing and organization supplies',
+      'Art and craft materials',
+      'Competitive prices on all items',
+    ],
+  },
+  {
+    slug: 'documentations',
+    title: 'Documentations',
+    icon: 'fa fa-folder-open-o',
+    image: '/images/servicesimg.jpg',
+    shortDesc: 'Professional documentation and legal document preparation services.',
+    longDesc: 'We provide comprehensive documentation services including legal documents, contracts, agreements, and official paperwork preparation. Our experienced team ensures accuracy and proper formatting for all types of documentation needs, from personal applications to business contracts and government forms.',
+    features: [
+      'Legal document preparation',
+      'Contract and agreement drafting',
+      'Application form filling',
+      'Government form assistance',
+      'Certificate preparation',
+      'Proper formatting guaranteed',
+    ],
+  },
+  {
+    slug: 'students-materials',
+    title: 'Students Materials',
+    icon: 'fa fa-graduation-cap',
+    image: '/images/servicesimg.jpg',
+    shortDesc: 'Study materials, notes, and academic support for students of all levels.',
+    longDesc: 'Supporting students at every level with comprehensive academic materials and services. From term papers and thesis proposals to class notes and assignments, we help students produce professional-quality academic documents. Our services include typing, formatting, binding, and printing of all academic materials.',
+    features: [
+      'Term paper and thesis typing',
+      'Class notes compilation',
+      'Assignment formatting',
+      'Research proposal preparation',
+      'Book binding (spiral and ring)',
+      'Affordable student pricing',
+    ],
+  },
+  {
+    slug: 'courier-services',
+    title: 'Courier Services',
+    icon: 'fa fa-truck',
+    image: '/images/servicesimg.jpg',
+    shortDesc: 'Reliable courier and delivery services across Chitwan and nearby districts.',
+    longDesc: 'Our courier service provides reliable and timely delivery across Chitwan and neighboring districts. Whether you need to send documents, packages, or printed materials, we ensure safe and prompt delivery to your destination. We partner with trusted logistics providers to offer competitive rates and tracking capabilities.',
+    features: [
+      'Document delivery services',
+      'Package courier across Chitwan',
+      'Timely and reliable delivery',
+      'Safe handling of materials',
+      'Competitive delivery rates',
+      'Tracking capabilities available',
+    ],
+  },
+]
+
+// Homepage quick cards — first 8 services
+export const homepageServices = services.slice(0, 8)
+
+// Get service by slug
+export function getServiceBySlug(slug: string): ServiceData | undefined {
+  return services.find((s) => s.slug === slug)
+}
+
+// Get all slugs for static params
+export function getAllServiceSlugs(): string[] {
+  return services.map((s) => s.slug)
+}

@@ -1,0 +1,611 @@
+/ Customizer Tabs /
+.peccular-customizer-tabs {
+    background: #FFF;
+    display: flex;
+    border-bottom: 3px solid #135e96;
+}
+
+.peccular-customizer-tabs a {
+    padding: 12px 8px;
+    color: #333;
+    text-decoration: none;
+    text-transform: uppercase;
+    outline: 0;
+    box-shadow: none;
+    flex-basis: 0;
+    flex-grow: 1;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.peccular-customizer-tabs a:hover{
+    background: #EAEAEA;
+}
+
+.peccular-customizer-tabs a.active {
+    background: #135e96;
+    color: #fff;
+}
+
+.peccular-customizer-tabs a span{
+    display: block;
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    line-height: 1;
+    transition: none;
+    margin-bottom: 3px;
+}
+
+/*--- slider control ----*/
+.slider-custom-control input[type=number]::-webkit-inner-spin-button,
+.slider-custom-control input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.slider-custom-control input[type=number] {
+    -moz-appearance: textfield;
+}
+.slider-custom-control input[type=number] {
+    width: 50px;
+    border-radius: 2px;
+    margin-left: 5px;
+}
+.slider-custom-control .slider {
+    width: 58%;
+    float: left;
+    margin: 15px 0 12px;
+}
+.slider-custom-control .slider-reset, .reset-button  {
+    cursor: pointer;
+    margin-left: 5px;
+    padding: 5px 8px;
+    display: inline-block;
+    color: #0073aa;
+    border: 1px solid #0073aa;
+    font-size: 11px;
+    border-radius: 2px;
+}
+.slider-custom-control .slider-value {
+    border: none;
+    text-align: right;
+    width: 50px;
+    margin-right: 5px;
+}
+.slider-custom-control .slider-value,
+.slider-custom-control .slider-unit {
+    float: right;
+}
+.slider-custom-control .ui-widget.ui-widget-content {
+    background: #ccc;
+}
+.slider-custom-control .ui-widget-content {
+    background: #f4f4f4 none repeat scroll 0 0;
+    color: #333;
+}
+.slider-custom-control .ui-slider-horizontal {
+    height: 3px;
+}
+.slider-custom-control .ui-slider {
+    position: relative;
+    text-align: left;
+}
+.slider-custom-control .ui-state-default,
+.slider-custom-control .ui-widget-content .ui-state-default,
+.slider-custom-control .ui-widget-header .ui-state-default,
+.slider-custom-control .ui-button,
+.slider-custom-control .ui-button.ui-state-disabled:hover,
+.slider-custom-control .ui-button.ui-state-disabled:active {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #aaa;
+    font-weight: normal;
+}
+.slider-custom-control .ui-slider-horizontal .ui-slider-handle {
+    margin-left: -7px;
+    top: -8px;
+    border-radius: 50%;
+}
+.slider-custom-control .ui-slider .ui-slider-handle {
+    cursor: pointer;
+    height: 17px;
+    position: absolute;
+    width: 17px;
+    z-index: 2;
+}
+.slider-custom-control .dashicons-image-rotate {
+    margin-top: 10px;
+    color: #d4d4d4;
+    size: 16px;
+}
+.slider-custom-control .dashicons-image-rotate:hover {
+    color: #a7a7a7;
+}
+
+.customize-reset-title {
+    font-size: 14px;
+    line-height: 1.75;
+    font-weight: 600;
+}
+.modal {
+  display: none;
+  position: fixed; 
+  z-index: 99; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+
+/ Modal Content /
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 25%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-content p {
+    font-size: 18px;
+    margin: 25px 0 16px;
+}
+.modal-content .refresh-btn {
+    font-size: 15px;
+    background: #2271b1;
+    padding: 8px 15px;
+    border-radius: 4px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+}
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover, .close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/*---- Toggle button -----*/
+.toggle-switch-control .customize-control-title {
+    display: inline-block;
+}
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    float: right;
+}
+.toggle-switch .toggle-switch-checkbox {
+    display: none;
+}
+.toggle-switch .toggle-switch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+ /*   border: 2px solid #000;*/
+    height: 18px;
+}
+.toggle-switch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.toggle-switch-inner:before,
+.toggle-switch-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 22px;
+    padding: 0;
+    line-height: 2;
+    font-size: 10px;
+    color: #fff;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+.toggle-switch-inner:before {
+    content: "ON";
+    padding-left: 5px;
+    background-color: #000;
+    color: #fff;
+}
+.toggle-switch-inner:after {
+    content: "OFF";
+    padding-right: 5px;
+    background-color: #eee;
+    color: #000;
+    text-align: right;
+}
+.toggle-switch-btn {
+    display: block;
+    width: 16px;
+    margin: 3px;
+    background: #000;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 28px;
+    transition: all 0.3s ease-in 0s;
+}
+.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-inner {
+    margin-left: 0;
+}
+.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-btn {
+    right: 0px;
+    background: #fff;
+}
+
+// customizer colors styles
+.customize-control-color .customize-control-title {
+    display: inline-block;
+}
+span.wp-color-result-text {
+    display: none;
+}
+.customize-control-color {
+    position: relative;
+}
+.wp-picker-container {
+    display:inline-block;
+}
+
+span.customize-control-title {
+    width: 72%;
+}
+button.button.wp-color-result {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 0;
+}
+.customize-control-switch span.customize-control-title {
+    / width: 72%; /
+    display: inline-block;
+}
+.customize-control-switch .onoffswitch{
+    position: relative;
+    width: 65px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    float: right;
+    margin: 0;
+}
+#customize-control-header_topbgColor2 button.button.wp-color-result,
+#customize-control-header_submenusbgssc2Color button.button.wp-color-result,
+#customize-control-peccular_services_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_services_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_services_title_color2 button.button.wp-color-result,
+#customize-control-peccular_services_btntext_color2 button.button.wp-color-result,
+#customize-control-peccular_services_icon_color2 button.button.wp-color-result,
+#customize-control-peccular_about_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_about_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_about_buttonbg_color2 button.button.wp-color-result,
+#customize-control-peccular_footer_section_bg_color2 button.button.wp-color-result,
+#customize-control-peccular_newsletter_section_bg_color2 button.button.wp-color-result,
+#customize-control-peccular_counter_iconhover_color2 button.button.wp-color-result,
+#customize-control-peccular_counter_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_counter_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_features_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_features_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_features_icon_color2 button.button.wp-color-result,
+#customize-control-peccular_features_title_color2 button.button.wp-color-result,
+#customize-control-peccular_features_boxbghover_color2 button.button.wp-color-result,
+#customize-control-peccular_steps_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_steps_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_steps_icon_color2 button.button.wp-color-result,
+#customize-control-peccular_steps_boxhover_color2 button.button.wp-color-result,
+#customize-control-peccular_project_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_project_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_facility_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_facility_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_facility_icon_color2 button.button.wp-color-result,
+#customize-control-peccular_facility_boxhover_color2 button.button.wp-color-result,
+#customize-control-peccular_testimonials_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_testimonials_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_testimonials_desg_color2 button.button.wp-color-result,
+#customize-control-peccular_testimonials_icon_color2 button.button.wp-color-result,
+#customize-control-peccular_testimonials_sliderbg_color2 button.button.wp-color-result,
+#customize-control-peccular_testimonials_section_hbg_color2 button.button.wp-color-result,
+#customize-control-peccular_pricing_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_pricing_headbg_color2 button.button.wp-color-result,
+#customize-control-peccular_contact_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_contact_btnbg_color2 button.button.wp-color-result,
+#customize-control-peccular_contact_section_hbg_color2 button.button.wp-color-result,
+#customize-control-peccular_blog_heading_color2 button.button.wp-color-result,
+#customize-control-peccular_blog_img_color2 button.button.wp-color-result,
+#customize-control-peccular_blog_datebg_color2 button.button.wp-color-result,
+#customize-control-peccular_footer_headingborder_color2 button.button.wp-color-result,
+#customize-control-peccular_blogpage_title_color2 button.button.wp-color-result,
+#customize-control-peccular_blogpage_metaicon_color2 button.button.wp-color-result,
+#customize-control-peccular_blogpage_socialiconbg_color2 button.button.wp-color-result,
+#customize-control-peccular_blogpage_datebg_color2 button.button.wp-color-result,
+#customize-control-peccular_contact_subheading_color2 button.button.wp-color-result,
+#customize-control-peccular_services_overlay_color2 button.button.wp-color-result
+
+{
+    position: absolute;
+    right: 34px;
+    top: -21px;
+}
+#customize-control-peccular_pricing_linkicon_color2 button.button.wp-color-result,
+#customize-control-peccular_pricing_listbg_color2 button.button.wp-color-result{
+    top: -2px;
+}
+
+li#customize-control-header_topbgColor2,
+#customize-control-header_submenusbgssc2Color,
+#customize-control-peccular_services_heading_color2,
+#customize-control-peccular_services_headingborder_color2,
+#customize-control-peccular_services_title_color2,
+#customize-control-peccular_services_btntext_color2,
+#customize-control-peccular_services_icon_color2,
+#customize-control-peccular_about_heading_color2,
+#customize-control-peccular_about_headingborder_color2,
+#customize-control-peccular_about_buttonbg_color2,
+#customize-control-peccular_footer_section_bg_color2,
+#customize-control-peccular_newsletter_section_bg_color2,
+#customize-control-peccular_counter_iconhover_color2,
+#customize-control-peccular_counter_heading_color2,
+#customize-control-peccular_counter_headingborder_color2,
+#customize-control-peccular_features_heading_color2,
+#customize-control-peccular_features_headingborder_color2,
+#customize-control-peccular_features_icon_color2,
+#customize-control-peccular_features_title_color2,
+#customize-control-peccular_features_boxbghover_color2,
+#customize-control-peccular_steps_heading_color2,
+#customize-control-peccular_steps_headingborder_color2,
+#customize-control-peccular_steps_icon_color2,
+#customize-control-peccular_steps_boxhover_color2,
+#customize-control-peccular_project_heading_color2,
+#customize-control-peccular_project_headingborder_color2,
+#customize-control-peccular_facility_heading_color2,
+#customize-control-peccular_facility_headingborder_color2,
+#customize-control-peccular_facility_icon_color2,
+#customize-control-peccular_facility_boxhover_color2,
+#customize-control-peccular_testimonials_heading_color2,
+#customize-control-peccular_testimonials_headingborder_color2,
+#customize-control-peccular_testimonials_desg_color2,
+#customize-control-peccular_testimonials_icon_color2,
+#customize-control-peccular_testimonials_sliderbg_color2,
+#customize-control-peccular_testimonials_section_hbg_color2,
+#customize-control-peccular_pricing_heading_color2,
+#customize-control-peccular_pricing_headbg_color2,
+#customize-control-peccular_pricing_linkicon_color2,
+#customize-control-peccular_pricing_listbg_color2,
+#customize-control-peccular_contact_headingborder_color2,
+#customize-control-peccular_contact_btnbg_color2,
+#customize-control-peccular_contact_section_hbg_color2,
+#customize-control-peccular_blog_heading_color2,
+#customize-control-peccular_blog_img_color2,
+#customize-control-peccular_blog_datebg_color2,
+#customize-control-peccular_footer_headingborder_color2,
+#customize-control-peccular_blogpage_title_color2,
+#customize-control-peccular_blogpage_metaicon_color2,
+#customize-control-peccular_blogpage_socialiconbg_color2,
+#customize-control-peccular_blogpage_datebg_color2,
+#customize-control-peccular_contact_subheading_color2,
+#customize-control-peccular_services_overlay_color2
+
+{
+    position: relative;
+    top: 0px;
+    margin: -30px 0;
+    z-index: 1;
+}
+li#customize-control-header_topbgColor2 span.customize-control-title,
+li#customize-control-header_submenusbgssc2Color span.customize-control-title,
+li#customize-control-peccular_services_heading_color2 span.customize-control-title,
+li#customize-control-peccular_services_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_services_title_color2 span.customize-control-title,
+li#customize-control-peccular_services_btntext_color2 span.customize-control-title,
+li#customize-control-peccular_services_icon_color2 span.customize-control-title,
+li#customize-control-peccular_about_heading_color2 span.customize-control-title,
+li#customize-control-peccular_about_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_about_buttonbg_color2 span.customize-control-title,
+li#customize-control-peccular_footer_section_bg_color2 span.customize-control-title,
+li#customize-control-peccular_newsletter_section_bg_color2 span.customize-control-title,
+li#customize-control-peccular_counter_iconhover_color2 span.customize-control-title,
+li#customize-control-peccular_counter_heading_color2 span.customize-control-title,
+li#customize-control-peccular_counter_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_features_heading_color2 span.customize-control-title,
+li#customize-control-peccular_features_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_features_icon_color2 span.customize-control-title,
+li#customize-control-peccular_features_title_color2 span.customize-control-title,
+li#customize-control-peccular_features_boxbghover_color2 span.customize-control-title,
+li#customize-control-peccular_steps_heading_color2 span.customize-control-title,
+li#customize-control-peccular_steps_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_steps_icon_color2 span.customize-control-title,
+li#customize-control-peccular_steps_boxhover_color2 span.customize-control-title,
+li#customize-control-peccular_project_heading_color2 span.customize-control-title,
+li#customize-control-peccular_project_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_facility_heading_color2 span.customize-control-title,
+li#customize-control-peccular_facility_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_facility_icon_color2 span.customize-control-title,
+li#customize-control-peccular_facility_boxhover_color2 span.customize-control-title,
+li#customize-control-peccular_testimonials_heading_color2 span.customize-control-title,
+li#customize-control-peccular_testimonials_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_testimonials_desg_color2 span.customize-control-title,
+li#customize-control-peccular_testimonials_icon_color2 span.customize-control-title,
+li#customize-control-peccular_testimonials_sliderbg_color2 span.customize-control-title,
+li#customize-control-peccular_testimonials_section_hbg_color2 span.customize-control-title,
+li#customize-control-peccular_pricing_heading_color2 span.customize-control-title,
+li#customize-control-peccular_pricing_headbg_color2 span.customize-control-title,
+li#customize-control-peccular_pricing_linkicon_color2 span.customize-control-title,
+li#customize-control-peccular_pricing_listbg_color2 span.customize-control-title,
+li#customize-control-peccular_contact_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_contact_btnbg_color2 span.customize-control-title,
+li#customize-control-peccular_contact_section_hbg_color2 span.customize-control-title,
+li#customize-control-peccular_blog_heading_color2 span.customize-control-title,
+li#customize-control-peccular_blog_img_color2 span.customize-control-title,
+li#customize-control-peccular_blog_datebg_color2 span.customize-control-title,
+li#customize-control-peccular_footer_headingborder_color2 span.customize-control-title,
+li#customize-control-peccular_blogpage_title_color2 span.customize-control-title,
+li#customize-control-peccular_blogpage_metaicon_color2 span.customize-control-title,
+li#customize-control-peccular_blogpage_socialiconbg_color2 span.customize-control-title,
+li#customize-control-peccular_blogpage_datebg_color2 span.customize-control-title,
+li#customize-control-peccular_contact_subheading_color2 span.customize-control-title,
+li#customize-control-peccular_services_overlay_color2 span.customize-control-title
+
+{
+    display: none;
+}
+li#customize-control-peccular_logo_top_margin,
+li#customize-control-peccular_logo_bottom_margin,
+li#customize-control-peccular_logo_left_margin,
+li#customize-control-peccular_logo_right_margin,
+li#customize-control-peccular_service_top_padding,
+li#customize-control-peccular_service_bottom_padding,
+li#customize-control-peccular_about_top_padding,
+li#customize-control-peccular_about_bottom_padding,
+li#customize-control-peccular_counter_section_t_padding,
+li#customize-control-peccular_counter_section_b_padding,
+li#customize-control-peccular_blog_section_t_padding,
+li#customize-control-peccular_blog_section_b_padding,
+li#customize-control-peccular_features_section_t_padding,
+li#customize-control-peccular_features_section_b_padding,
+li#customize-control-peccular_facility_section_t_padding,
+li#customize-control-peccular_facility_section_b_padding,
+li#customize-control-peccular_newsletter_section_t_padding,
+li#customize-control-peccular_newsletter_section_b_padding,
+li#customize-control-peccular_ourclient_section_t_padding,
+li#customize-control-peccular_ourclient_section_b_padding,
+li#customize-control-peccular_pricing_section_t_padding,
+li#customize-control-peccular_pricing_section_b_padding,
+li#customize-control-peccular_project_section_t_padding,
+li#customize-control-peccular_project_section_b_padding,
+li#customize-control-peccular_steps_section_t_padding,
+li#customize-control-peccular_steps_section_b_padding,
+li#customize-control-peccular_team_section_t_padding,
+li#customize-control-peccular_team_section_b_padding,
+li#customize-control-peccular_testimonials_section_t_padding,
+li#customize-control-peccular_testimonials_section_b_padding,
+li#customize-control-peccular_contactl_section_t_padding,
+li#customize-control-peccular_contactl_section_b_padding,
+li#customize-control-peccular_contactr_section_t_padding,
+li#customize-control-peccular_contactr_section_b_padding,
+li#customize-control-peccular_footer_section_top_t_padding,
+li#customize-control-peccular_footer_section_top_b_padding,
+li#customize-control-peccular_footer_section_bottom_t_padding,
+li#customize-control-peccular_footer_section_bottom_b_padding,
+li#customize-control-peccular_innerpage_pagetitle_t_padding,
+li#customize-control-peccular_innerpage_pagetitle_b_padding{
+    clear: none;
+    width: 21%;
+    margin-right: 10px;
+}
+.wp-picker-holder {
+    position: relative;
+    z-index: 2;
+}
+input#_customize-input-peccular_logo_margin,
+input#_customize-input-peccular_service_padding,
+input#_customize-input-peccular_about_padding,
+input#_customize-input-peccular_blog_padding,
+input#_customize-input-peccular_counter_padding,
+input#_customize-input-peccular_features_padding,
+input#_customize-input-peccular_facility_padding,
+input#_customize-input-peccular_newsletter_padding,
+input#_customize-input-peccular_ourclient_padding,
+input#_customize-input-peccular_pricing_padding,
+input#_customize-input-peccular_project_padding,
+input#_customize-input-peccular_steps_padding,
+input#_customize-input-peccular_team_padding,
+input#_customize-input-peccular_testimonials_padding,
+input#_customize-input-peccular_contact_padding1,
+input#_customize-input-peccular_contact_padding,
+input#_customize-input-peccular_footer_padding,
+input#_customize-input-peccular_footer_padding1,
+input#_customize-input-peccular_innerpage_pagetitle_padding
+{
+    display: none;
+}
+
+li#customize-control-display_header_text {
+    display: none;
+}
+li#customize-control-peccular_logo_margin{
+    margin-bottom: 0;
+}
+#customize-control-peccular_logo_top_margin label,
+#customize-control-peccular_logo_bottom_margin label,
+#customize-control-peccular_logo_left_margin label,
+#customize-control-peccular_logo_right_margin label,
+#customize-control-peccular_service_top_padding label,
+#customize-control-peccular_service_bottom_padding label,
+#customize-control-peccular_about_top_padding label,
+#customize-control-peccular_about_bottom_padding label,
+#customize-control-peccular_blog_section_t_padding label,
+#customize-control-peccular_blog_section_b_padding label,
+#customize-control-peccular_counter_section_t_padding label,
+#customize-control-peccular_counter_section_b_padding label,
+#customize-control-peccular_features_section_t_padding label,
+#customize-control-peccular_features_section_b_padding label,
+#customize-control-peccular_facility_section_t_padding label,
+#customize-control-peccular_facility_section_b_padding label,
+#customize-control-peccular_newsletter_section_t_padding label,
+#customize-control-peccular_newsletter_section_b_padding label,
+#customize-control-peccular_ourclient_section_t_padding label,
+#customize-control-peccular_ourclient_section_b_padding label,
+#customize-control-peccular_pricing_section_t_padding label,
+#customize-control-peccular_pricing_section_b_padding label,
+#customize-control-peccular_project_section_t_padding label,
+#customize-control-peccular_project_section_b_padding label,
+#customize-control-peccular_steps_section_t_padding label,
+#customize-control-peccular_steps_section_b_padding label,
+#customize-control-peccular_team_section_t_padding label,
+#customize-control-peccular_team_section_b_padding label,
+#customize-control-peccular_testimonials_section_t_padding label,
+#customize-control-peccular_testimonials_section_b_padding label,
+#customize-control-peccular_contactl_section_t_padding label,
+#customize-control-peccular_contactl_section_b_padding label,
+#customize-control-peccular_contactr_section_t_padding label,
+#customize-control-peccular_contactr_section_b_padding label,
+
+#customize-control-peccular_footer_section_top_t_padding label,
+#customize-control-peccular_footer_section_top_b_padding label,
+#customize-control-peccular_footer_section_bottom_t_padding label,
+#customize-control-peccular_footer_section_bottom_b_padding label,
+#customize-control-peccular_innerpage_pagetitle_t_padding label,
+#customize-control-peccular_innerpage_pagetitle_b_padding label{
+    font-weight: 600;
+    display: block;
+    font-style: italic;
+    line-height: 1.4;
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size:13px;
+}
+li#customize-control-peccular_logo_right_margin{
+    margin: 0;
+}
+li#customize-control-peccular_service_head_icon_enable span.customize-inside-control-row,
+li#customize-control-peccular_about_head_icon_enable span.customize-inside-control-row,
+li#customize-control-peccular_counter_head_icon_enable span.customize-inside-control-row,
+li#customize-control-peccular_features_head_icon_enable span.customize-inside-control-row,
+li#customize-control-peccular_steps_head_icon_enable span.customize-inside-control-row,
+li#customize-control-peccular_project_head_icon_enable span.customize-inside-control-row,
+li#customize-control-peccular_facility_head_icon_enable span.customize-inside-control-row,
+li#customize-control-peccular_team_head_icon_enable span.customize-inside-control-row,
+li#customize-contro
