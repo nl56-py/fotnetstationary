@@ -8,6 +8,8 @@ interface DashboardStats {
   services: number
   gallery: number
   blogs: number
+  notary: number
+  notes: number
 }
 
 interface RecentBooking {
@@ -20,7 +22,7 @@ interface RecentBooking {
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<DashboardStats>({ bookings: 0, messages: 0, services: 0, gallery: 0, blogs: 0 })
+  const [stats, setStats] = useState<DashboardStats>({ bookings: 0, messages: 0, services: 0, gallery: 0, blogs: 0, notary: 0, notes: 0 })
   const [recentBookings, setRecentBookings] = useState<RecentBooking[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -28,13 +30,15 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       const supabase = createClient()
 
-      const [bookingsRes, messagesRes, servicesRes, galleryRes, blogsRes, recentRes] = await Promise.all([
+      const [bookingsRes, messagesRes, servicesRes, galleryRes, blogsRes, recentRes, notaryRes, notesRes] = await Promise.all([
         supabase.from('bookings').select('id', { count: 'exact', head: true }),
         supabase.from('contact_submissions').select('id', { count: 'exact', head: true }).eq('is_read', false),
         supabase.from('services').select('id', { count: 'exact', head: true }),
         supabase.from('gallery_images').select('id', { count: 'exact', head: true }),
         supabase.from('blog_posts').select('id', { count: 'exact', head: true }),
         supabase.from('bookings').select('*').order('created_at', { ascending: false }).limit(5),
+        supabase.from('notary_requests').select('id', { count: 'exact', head: true }),
+        supabase.from('notes').select('id', { count: 'exact', head: true }),
       ])
 
       setStats({
@@ -43,6 +47,8 @@ export default function AdminDashboard() {
         services: servicesRes.count || 0,
         gallery: galleryRes.count || 0,
         blogs: blogsRes.count || 0,
+        notary: notaryRes.count || 0,
+        notes: notesRes.count || 0,
       })
       setRecentBookings(recentRes.data || [])
       setLoading(false)
@@ -52,6 +58,8 @@ export default function AdminDashboard() {
 
   const statCards = [
     { label: 'Total Bookings', value: stats.bookings, icon: 'fa fa-calendar-check-o', color: '#3347B0', bg: '#eef1ff' },
+    { label: 'Notary Requests', value: stats.notary, icon: 'fa fa-file-text-o', color: '#16a085', bg: '#e8f6f3' },
+    { label: 'Academic Notes', value: stats.notes, icon: 'fa fa-sticky-note', color: '#2980b9', bg: '#ebf5fb' },
     { label: 'Unread Messages', value: stats.messages, icon: 'fa fa-envelope', color: '#e74c3c', bg: '#fdecea' },
     { label: 'Active Services', value: stats.services, icon: 'fa fa-cogs', color: '#27ae60', bg: '#e8f8f0' },
     { label: 'Gallery Images', value: stats.gallery, icon: 'fa fa-image', color: '#f39c12', bg: '#fef9e7' },

@@ -39,7 +39,10 @@ export default function Header() {
     { label: 'Home', href: '/' },
     { label: 'About Us', href: '/about' },
     { label: 'Services', href: '/services' },
+    { label: 'Notary Services', href: '/notary' },
     { label: 'Pricing', href: '/pricing' },
+    { label: 'Notice & Downloads', href: '/notices' },
+    { label: 'Notes', href: '/notes' },
     { label: 'Gallery', href: '/gallery' },
     { label: 'Videos', href: '/videos' },
     { label: 'Blog', href: '/blog' },
@@ -91,7 +94,7 @@ export default function Header() {
               </div>
               <span className="separator">|</span>
               <div className="header-socials">
-                <a href="https://facebook.com/" title="Facebook" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.facebook.com/p/Fonet-Stationery-Center-100083723779495/" title="Facebook" target="_blank" rel="noopener noreferrer">
                   <i className="fa fa-facebook"></i>
                 </a>
                 <a href="https://instagram.com/" title="Instagram" target="_blank" rel="noopener noreferrer">
@@ -225,7 +228,7 @@ export default function Header() {
             <span>10-00.AM 6.00.PM</span>
           </div>
           <div className="mobile-socials">
-            <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer"><i className="fa fa-facebook"></i></a>
+            <a href="https://www.facebook.com/p/Fonet-Stationery-Center-100083723779495/" target="_blank" rel="noopener noreferrer"><i className="fa fa-facebook"></i></a>
             <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer"><i className="fa fa-instagram"></i></a>
             <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer"><i className="fa fa-twitter"></i></a>
             <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer"><i className="fa fa-youtube-play"></i></a>

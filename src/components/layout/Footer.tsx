@@ -45,7 +45,10 @@ export default function Footer() {
                       <li><Link href="/">Home</Link></li>
                       <li><Link href="/about">About Us</Link></li>
                       <li><Link href="/services">Services</Link></li>
+                      <li><Link href="/notary">Notary Services</Link></li>
                       <li><Link href="/pricing">Pricing</Link></li>
+                      <li><Link href="/notices">Notice & Downloads</Link></li>
+                      <li><Link href="/notes">Notes</Link></li>
                       <li><Link href="/gallery">Gallery</Link></li>
                       <li><Link href="/blog">Blog</Link></li>
                       <li><Link href="/contact">Contact Us</Link></li>
@@ -59,7 +62,8 @@ export default function Footer() {
                     <h3>Our Services</h3>
                     <ul>
                       <li><Link href="/services/thesis-typing">Thesis Typing</Link></li>
-                      <li><Link href="/services/photocopy-center">Photocopy</Link></li>
+                      <li><Link href="/services/photocopy-center">Photocopy Center</Link></li>
+                      <li><Link href="/notary">Notary Services</Link></li>
                       <li><Link href="/services/flex-print">Flex Print</Link></li>
                       <li><Link href="/services/lamination">Lamination</Link></li>
                       <li><Link href="/services/visiting-card">Visiting Card</Link></li>
@@ -111,6 +115,18 @@ export default function Footer() {
         style={{ cursor: 'pointer' }}
       >
         &#10148;
+      </a>
+
+      {/* WhatsApp Floating Widget */}
+      <a
+        href="https://wa.me/9779845220077"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="whatsapp-floating-widget"
+        title="Chat with us on WhatsApp!"
+      >
+        <i className="fa fa-whatsapp"></i>
+        <span className="whatsapp-tooltip">Chat with us on WhatsApp!</span>
       </a>
     </>
   )

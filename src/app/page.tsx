@@ -10,11 +10,16 @@ import GallerySection from '@/components/sections/GallerySection'
 import CounterSection from '@/components/sections/CounterSection'
 import BookingSection from '@/components/sections/BookingSection'
 import BlogSection from '@/components/sections/BlogSection'
+import GoogleReviews from '@/components/sections/GoogleReviews'
+import NoticePopup from '@/components/sections/NoticePopup'
 
 export default function HomePage() {
   return (
     <div className="main-container">
       <Header />
+      
+      {/* Important Announcement Notice Popup on Homepage load */}
+      <NoticePopup />
 
       {/* Homepage Sections - Same order as WP theme */}
       <HeroSlider />
@@ -28,19 +33,11 @@ export default function HomePage() {
       <BookingSection />
       <BlogSection />
 
-      {/* Newsletter Section */}
-      <div className="newsletter-area">
-        <div className="container">
-          <h2>SUBSCRIBE TO OUR NEWSLETTER</h2>
-          <p>Stay updated with the latest news and offers from Fonet Stationary Center</p>
-          <div className="newsletter-form">
-            <input type="email" placeholder="Enter your email address" />
-            <button type="button">Subscribe</button>
-          </div>
-        </div>
-      </div>
+      {/* Google Reviews auto scrolling section replacing newsletter */}
+      <GoogleReviews />
 
       <Footer />
     </div>
   )
 }
+

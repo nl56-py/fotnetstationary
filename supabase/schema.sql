@@ -385,3 +385,96 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
+
+-- ============================================
+-- NOTARY SERVICES, NOTICES & DOWNLOADS, STUDY NOTES
+-- ============================================
+
+-- Notary Service Requests
+CREATE TABLE IF NOT EXISTS notary_requests (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  customer_name TEXT NOT NULL,
+  customer_email TEXT,
+  customer_phone TEXT NOT NULL,
+  service_type TEXT NOT NULL,
+  sub_service_type TEXT,
+  message TEXT,
+  file_url TEXT,
+  drive_link TEXT,
+  status TEXT DEFAULT 'pending',
+  admin_notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS and add policies for notary_requests
+ALTER TABLE notary_requests ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "public_insert_notary_requests" ON notary_requests;
+CREATE POLICY "public_insert_notary_requests" ON notary_requests FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "admin_all_notary_requests" ON notary_requests;
+CREATE POLICY "admin_all_notary_requests" ON notary_requests FOR ALL USING (auth.role() = 'authenticated');
+
+-- Notices and News/Downloads
+CREATE TABLE IF NOT EXISTS notices_downloads (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  content TEXT,
+  type TEXT DEFAULT 'Notice', -- 'Notice', 'News', 'Download'
+  file_url TEXT, -- for downloads or notice attachments
+  is_active BOOLEAN DEFAULT TRUE,
+  sort_order INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS and add policies for notices_downloads
+ALTER TABLE notices_downloads ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "public_read_notices_downloads" ON notices_downloads;
+CREATE POLICY "public_read_notices_downloads" ON notices_downloads FOR SELECT USING (is_active = true);
+DROP POLICY IF EXISTS "admin_all_notices_downloads" ON notices_downloads;
+CREATE POLICY "admin_all_notices_downloads" ON notices_downloads FOR ALL USING (auth.role() = 'authenticated');
+
+-- Study Notes
+CREATE TABLE IF NOT EXISTS notes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  subject TEXT,
+  class_level TEXT,
+  file_url TEXT NOT NULL,
+  description TEXT,
+  is_active BOOLEAN DEFAULT TRUE,
+  sort_order INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS and add policies for notes
+ALTER TABLE notes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "public_read_notes" ON notes;
+CREATE POLICY "public_read_notes" ON notes FOR SELECT USING (is_active = true);
+DROP POLICY IF EXISTS "admin_all_notes" ON notes;
+CREATE POLICY "admin_all_notes" ON notes FOR ALL USING (auth.role() = 'authenticated');
+
+-- Storage Bucket creation and policies (for documents upload)
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('documents', 'documents', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Policies for documents bucket inside storage.objects
+DROP POLICY IF EXISTS "Public Access" ON storage.objects;
+CREATE POLICY "Public Access" ON storage.objects FOR SELECT USING (bucket_id = 'documents');
+DROP POLICY IF EXISTS "Public Upload" ON storage.objects;
+CREATE POLICY "Public Upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'documents');
+DROP POLICY IF EXISTS "Public Update" ON storage.objects;
+CREATE POLICY "Public Update" ON storage.objects FOR UPDATE USING (bucket_id = 'documents');
+DROP POLICY IF EXISTS "Public Delete" ON storage.objects;
+CREATE POLICY "Public Delete" ON storage.objects FOR DELETE USING (bucket_id = 'documents');
+
+-- Seed settings for banner popup
+INSERT INTO site_settings (key, value) VALUES
+('banner_notice_active', 'false'),
+('banner_notice_text', 'Welcome to Fonet Stationery Center! Check out our new Notary services.'),
+('banner_notice_image_url', '')
+ON CONFLICT (key) DO NOTHING;
+
+

@@ -7,6 +7,9 @@ import { useAuth } from '@/context/AuthContext'
 const sidebarItems = [
   { label: 'Dashboard', icon: 'fa fa-dashboard', href: '/admin' },
   { label: 'Services', icon: 'fa fa-cogs', href: '/admin/services' },
+  { label: 'Notary Requests', icon: 'fa fa-file-text-o', href: '/admin/notary' },
+  { label: 'Notices & News', icon: 'fa fa-bullhorn', href: '/admin/notices' },
+  { label: 'Notes', icon: 'fa fa-sticky-note', href: '/admin/notes' },
   { label: 'Gallery', icon: 'fa fa-image', href: '/admin/gallery' },
   { label: 'Pricing', icon: 'fa fa-money', href: '/admin/pricing' },
   { label: 'Blog Posts', icon: 'fa fa-pencil-square-o', href: '/admin/blogs' },

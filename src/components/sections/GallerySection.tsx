@@ -26,8 +26,29 @@ export default function GallerySection() {
   const [activeFilter, setActiveFilter] = useState('All')
   const [loading, setLoading] = useState(true)
   
+  // View toggle and slider states
+  const [viewMode, setViewMode] = useState<'grid' | 'slider'>('grid')
+  const [slideIndex, setSlideIndex] = useState(0)
+  const [itemsToShow, setItemsToShow] = useState(4)
+
   // Lightbox state
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 576) setItemsToShow(1)
+      else if (window.innerWidth < 768) setItemsToShow(2)
+      else if (window.innerWidth < 992) setItemsToShow(3)
+      else setItemsToShow(4)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    setSlideIndex(0)
+  }, [activeFilter])
 
   useEffect(() => {
     async function fetchGallery() {
@@ -97,6 +118,14 @@ export default function GallerySection() {
     setLightboxIndex(lightboxIndex === filtered.length - 1 ? 0 : lightboxIndex + 1)
   }
 
+  const handlePrevSlide = () => {
+    setSlideIndex((prev) => (prev === 0 ? Math.max(0, filtered.length - itemsToShow) : prev - 1))
+  }
+
+  const handleNextSlide = () => {
+    setSlideIndex((prev) => (prev >= filtered.length - itemsToShow ? 0 : prev + 1))
+  }
+
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px' }}>
@@ -109,7 +138,7 @@ export default function GallerySection() {
     <div id="cb-sec3">
       <section id="gallery" style={{ padding: '60px 0' }}>
         <div className="container">
-          <div className="head_white head_center" style={{ marginBottom: 40 }}>
+          <div className="head_white head_center" style={{ marginBottom: 30 }}>
             <div className="title-dot"></div>
             <div className="section-title">
               <div className="sub-title">PRODUCT</div>
@@ -118,7 +147,7 @@ export default function GallerySection() {
           </div>
 
           {/* Category filter */}
-          <div className="gallery-filters" style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 40 }}>
+          <div className="gallery-filters" style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 25 }}>
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -142,39 +171,184 @@ export default function GallerySection() {
             ))}
           </div>
 
-          <div id="image-gallery">
-            <div className="row" style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {filtered.map((image, idx) => (
-                <AnimateOnScroll
-                  key={image.id}
-                  className="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12 portfolio_item_post"
-                  style={{ marginBottom: 30 }}
+          {/* View Mode Toggle */}
+          <div className="view-mode-toggle" style={{ display: 'flex', justifyContent: 'center', gap: 15, marginBottom: 40 }}>
+            <button 
+              onClick={() => setViewMode('grid')}
+              style={{
+                padding: '8px 18px',
+                borderRadius: '8px',
+                border: '1px solid #3347B0',
+                background: viewMode === 'grid' ? '#3347B0' : 'transparent',
+                color: viewMode === 'grid' ? '#fff' : '#3347B0',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: 13,
+                transition: 'all 0.3s'
+              }}
+            >
+              <i className="fa fa-th" style={{ marginRight: 8 }}></i> Grid View
+            </button>
+            <button 
+              onClick={() => setViewMode('slider')}
+              style={{
+                padding: '8px 18px',
+                borderRadius: '8px',
+                border: '1px solid #3347B0',
+                background: viewMode === 'slider' ? '#3347B0' : 'transparent',
+                color: viewMode === 'slider' ? '#fff' : '#3347B0',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: 13,
+                transition: 'all 0.3s'
+              }}
+            >
+              <i className="fa fa-sliders" style={{ marginRight: 8 }}></i> Slider View
+            </button>
+          </div>
+
+          {viewMode === 'slider' ? (
+            <div className="gallery-slider-wrapper" style={{ position: 'relative', overflow: 'hidden', padding: '0 40px' }}>
+              <div 
+                style={{ 
+                  overflow: 'hidden', 
+                  width: '100%', 
+                  position: 'relative',
+                  borderRadius: 12
+                }}
+              >
+                <div 
+                  style={{ 
+                    display: 'flex', 
+                    transition: 'transform 0.5s ease', 
+                    transform: `translateX(-${slideIndex * (100 / itemsToShow)}%)`,
+                    width: `${(filtered.length / itemsToShow) * 100}%`
+                  }}
                 >
-                  <div className="item_content" style={{ cursor: 'pointer' }} onClick={() => handleOpenLightbox(idx)}>
-                    <div className="img-wrapper post_media" style={{ borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', position: 'relative' }}>
-                      <img 
-                        src={getImageSrc(image.image_url)} 
-                        alt={image.title || 'Gallery Image'} 
-                        style={{ width: '100%', height: 250, objectFit: 'cover', transition: 'transform 0.5s ease' }}
-                        className="gallery-item-image"
-                      />
-                      <div className="img-overlay">
-                        <div className="cwsportfolio_content_wrap">
-                          <div className="hover-effect">
-                            <i className="fa fa-search-plus" style={{ fontSize: 24, color: '#fff' }}></i>
-                          </div>
-                          <div style={{ position: 'absolute', bottom: 15, left: 15, right: 15, color: '#fff', zIndex: 10 }}>
-                            <h4 style={{ margin: 0, fontSize: 16, fontWeight: 700, fontFamily: "'Oswald', sans-serif" }}>{image.title || 'Gallery View'}</h4>
-                            <span style={{ fontSize: 12, opacity: 0.8, textTransform: 'uppercase', letterSpacing: 1 }}>{image.category}</span>
+                  {filtered.map((image, idx) => (
+                    <div 
+                      key={image.id} 
+                      style={{ 
+                        width: `${100 / filtered.length}%`, 
+                        padding: '0 10px',
+                        boxSizing: 'border-box'
+                      }}
+                    >
+                      <div className="item_content" style={{ cursor: 'pointer' }} onClick={() => handleOpenLightbox(idx)}>
+                        <div className="img-wrapper post_media" style={{ borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', position: 'relative' }}>
+                          <img 
+                            src={getImageSrc(image.image_url)} 
+                            alt={image.title || 'Gallery Image'} 
+                            style={{ width: '100%', height: 250, objectFit: 'cover', transition: 'transform 0.5s ease' }}
+                            className="gallery-item-image"
+                          />
+                          <div className="img-overlay">
+                            <div className="cwsportfolio_content_wrap">
+                              <div className="hover-effect">
+                                <i className="fa fa-search-plus" style={{ fontSize: 24, color: '#fff' }}></i>
+                              </div>
+                              <div style={{ position: 'absolute', bottom: 15, left: 15, right: 15, color: '#fff', zIndex: 10 }}>
+                                <h4 style={{ margin: 0, fontSize: 16, fontWeight: 700, fontFamily: "'Oswald', sans-serif" }}>{image.title || 'Gallery View'}</h4>
+                                <span style={{ fontSize: 12, opacity: 0.8, textTransform: 'uppercase', letterSpacing: 1 }}>{image.category}</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </AnimateOnScroll>
-              ))}
+                  ))}
+                </div>
+              </div>
+
+              {/* Slider Controls */}
+              {filtered.length > itemsToShow && (
+                <>
+                  <button 
+                    onClick={handlePrevSlide}
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: '#3347B0',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: 40,
+                      height: 40,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
+                      zIndex: 20
+                    }}
+                    aria-label="Previous slide"
+                  >
+                    <i className="fa fa-chevron-left"></i>
+                  </button>
+                  <button 
+                    onClick={handleNextSlide}
+                    style={{
+                      position: 'absolute',
+                      right: 0,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: '#3347B0',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: 40,
+                      height: 40,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
+                      zIndex: 20
+                    }}
+                    aria-label="Next slide"
+                  >
+                    <i className="fa fa-chevron-right"></i>
+                  </button>
+                </>
+              )}
             </div>
-          </div>
+          ) : (
+            <div id="image-gallery">
+              <div className="row" style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {filtered.map((image, idx) => (
+                  <AnimateOnScroll
+                    key={image.id}
+                    className="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12 portfolio_item_post"
+                    style={{ marginBottom: 30 }}
+                  >
+                    <div className="item_content" style={{ cursor: 'pointer' }} onClick={() => handleOpenLightbox(idx)}>
+                      <div className="img-wrapper post_media" style={{ borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', position: 'relative' }}>
+                        <img 
+                          src={getImageSrc(image.image_url)} 
+                          alt={image.title || 'Gallery Image'} 
+                          style={{ width: '100%', height: 250, objectFit: 'cover', transition: 'transform 0.5s ease' }}
+                          className="gallery-item-image"
+                        />
+                        <div className="img-overlay">
+                          <div className="cwsportfolio_content_wrap">
+                            <div className="hover-effect">
+                              <i className="fa fa-search-plus" style={{ fontSize: 24, color: '#fff' }}></i>
+                            </div>
+                            <div style={{ position: 'absolute', bottom: 15, left: 15, right: 15, color: '#fff', zIndex: 10 }}>
+                              <h4 style={{ margin: 0, fontSize: 16, fontWeight: 700, fontFamily: "'Oswald', sans-serif" }}>{image.title || 'Gallery View'}</h4>
+                              <span style={{ fontSize: 12, opacity: 0.8, textTransform: 'uppercase', letterSpacing: 1 }}>{image.category}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </AnimateOnScroll>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

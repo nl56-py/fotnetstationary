@@ -16,6 +16,10 @@ const settingGroups = [
     title: 'Content',
     keys: ['about_text', 'history_text', 'mission_text', 'vision_text', 'copyright'],
   },
+  {
+    title: 'Announcement Popup Banner',
+    keys: ['banner_notice_active', 'banner_notice_text', 'banner_notice_image_url'],
+  },
 ]
 
 export default function AdminSettings() {
@@ -29,7 +33,22 @@ export default function AdminSettings() {
     const fetchSettings = async () => {
       const sb = createClient()
       const { data } = await sb.from('site_settings').select('*').order('key')
-      setSettings(data || [])
+      let dbSettings = data || []
+      
+      const allKeys = settingGroups.flatMap(g => g.keys)
+      const missingKeys = allKeys.filter(k => !dbSettings.some(s => s.key === k))
+      
+      if (missingKeys.length > 0) {
+        const placeholders = missingKeys.map(k => ({
+          id: Math.random().toString(),
+          key: k,
+          value: k === 'banner_notice_active' ? 'false' : '',
+          updated_at: new Date().toISOString()
+        }))
+        dbSettings = [...dbSettings, ...placeholders]
+      }
+      
+      setSettings(dbSettings)
       setLoading(false)
     }
     fetchSettings()
@@ -41,11 +60,28 @@ export default function AdminSettings() {
 
   const handleSave = async () => {
     setSaving(true)
-    for (const setting of settings) {
-      await supabase.from('site_settings').update({ value: setting.value, updated_at: new Date().toISOString() }).eq('id', setting.id)
+    const records = settings.map(s => {
+      const record: any = {
+        key: s.key,
+        value: s.value,
+        updated_at: new Date().toISOString()
+      }
+      if (s.id && s.id.length > 15) {
+        record.id = s.id
+      }
+      return record
+    })
+
+    const { error } = await supabase.from('site_settings').upsert(records, { onConflict: 'key' })
+    
+    if (error) {
+      alert('Error saving settings: ' + error.message)
+    } else {
+      alert('Settings saved successfully!')
+      const { data } = await supabase.from('site_settings').select('*').order('key')
+      if (data) setSettings(data)
     }
     setSaving(false)
-    alert('Settings saved successfully!')
   }
 
   if (loading) return <div className="loading-spinner"><div className="spinner"></div></div>
@@ -71,7 +107,7 @@ export default function AdminSettings() {
             {group.keys.map(key => {
               const setting = settings.find(s => s.key === key)
               if (!setting) return null
-              const isLong = ['about_text', 'history_text', 'mission_text', 'vision_text'].includes(key)
+              const isLong = ['about_text', 'history_text', 'mission_text', 'vision_text', 'banner_notice_text'].includes(key)
               return (
                 <div key={key} style={{ gridColumn: isLong ? 'span 2' : 'span 1' }}>
                   <label style={{ display: 'block', fontSize: 13, color: '#666', marginBottom: 6, fontWeight: 500 }}>
