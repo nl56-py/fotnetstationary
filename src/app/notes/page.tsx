@@ -249,7 +249,7 @@ export default function NotesPage() {
                     <div style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: 12, border: '1px solid #eee' }}>
                       <i className="fa fa-book" style={{ fontSize: 55, color: '#ccc', marginBottom: 15 }}></i>
                       <h3 style={{ margin: 0, color: '#666', fontSize: 18 }}>No academic notes match your filters.</h3>
-                      <p style={{ color: '#888', marginTop: 10 }}>Try adjusting your search keywords or setting filters to "All".</p>
+                      <p style={{ color: '#888', marginTop: 10 }}>Try adjusting your search keywords or setting filters to &quot;All&quot;.</p>
                     </div>
                   ) : (
                     <div className="row" style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>

@@ -226,7 +226,7 @@ export default function NoticesPage() {
               {filteredItems.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: 12, border: '1px solid #eee' }}>
                   <i className="fa fa-folder-open-o" style={{ fontSize: 48, color: '#ccc', marginBottom: 15 }}></i>
-                  <h3 style={{ margin: 0, color: '#666', fontSize: 18 }}>No items found matching "{searchQuery}"</h3>
+                  <h3 style={{ margin: 0, color: '#666', fontSize: 18 }}>No items found matching &quot;{searchQuery}&quot;</h3>
                 </div>
               ) : (
                 <div className="row" style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
