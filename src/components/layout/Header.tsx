@@ -2,10 +2,16 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import NepaliDate from 'nepali-date-converter'
 
 const businessHours = '7:00 AM - 7:00 PM'
 const facebookHref = 'https://www.facebook.com/p/Fonet-Stationery-Center-100083723779495/'
 const dateConverterHref = 'https://merotool.com/date-converter'
+
+const nepaliMonths = [
+  'Baisakh', 'Jestha', 'Ashadh', 'Shrawan', 'Bhadra', 'Ashoj', 
+  'Kartik', 'Mangsir', 'Poush', 'Magh', 'Fagun', 'Chaitra'
+]
 
 export default function Header() {
   const pathname = usePathname()
@@ -13,11 +19,62 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
 
+  // Date Converter States
+  const [mounted, setMounted] = useState(false)
+  const [converterOpen, setConverterOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<'ad2bs' | 'bs2ad'>('ad2bs')
+  const [todayBS, setTodayBS] = useState('')
+  const [todayAD, setTodayAD] = useState('')
+
+  // AD to BS State
+  const [adInput, setAdInput] = useState('')
+  const [bsOutput, setBsOutput] = useState('')
+
+  // BS to AD State
+  const [bsYear, setBsYear] = useState(2081)
+  const [bsMonth, setBsMonth] = useState(5) // Ashoj
+  const [bsDay, setBsDay] = useState(1)
+  const [adOutput, setAdOutput] = useState('')
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    setMounted(true)
+    const today = new Date()
+    const nepDate = new NepaliDate(today)
+    setTodayBS(nepDate.format('DD MMMM YYYY'))
+    setTodayAD(today.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }))
+    
+    // Set default converter fields to today
+    setBsYear(nepDate.getYear())
+    setBsMonth(nepDate.getMonth())
+    setBsDay(nepDate.getDate())
+    
+    const adString = today.toISOString().split('T')[0]
+    setAdInput(adString)
+    setBsOutput(nepDate.format('YYYY MMMM DD, dddd'))
+    
+    try {
+      const adVal = nepDate.toJsDate()
+      setAdOutput(adVal.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }))
+    } catch (e) {
+      setAdOutput('')
+    }
+  }, [])
+
+  const updateAdOutput = (y: number, m: number, d: number) => {
+    try {
+      const nep = new NepaliDate(y, m, d)
+      const ad = nep.toJsDate()
+      setAdOutput(ad.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }))
+    } catch (err) {
+      setAdOutput('Invalid Date')
+    }
+  }
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen)
@@ -90,6 +147,121 @@ export default function Header() {
               </Link>
             </div>
 
+            {/* Center: Live Nepali Date Converter Directly */}
+            <div className="header-date-converter-direct">
+              <div className="converter-label-inline">
+                <i className="fa fa-calendar-check-o icon"></i>
+                <span>Date Converter</span>
+              </div>
+
+              {mounted ? (
+                <>
+                  <div className="converter-mode-toggle">
+                    <button 
+                      className={`mode-btn ${activeTab === 'ad2bs' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('ad2bs')}
+                      type="button"
+                    >
+                      AD to BS
+                    </button>
+                    <button 
+                      className={`mode-btn ${activeTab === 'bs2ad' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('bs2ad')}
+                      type="button"
+                    >
+                      BS to AD
+                    </button>
+                  </div>
+
+                  <div className="converter-inputs-inline">
+                    {activeTab === 'ad2bs' ? (
+                      <div className="inline-input-group">
+                        <input 
+                          type="date" 
+                          value={adInput}
+                          className="inline-input-field"
+                          onChange={(e) => {
+                            setAdInput(e.target.value)
+                            if (e.target.value) {
+                              try {
+                                const d = new Date(e.target.value)
+                                const nep = new NepaliDate(d)
+                                setBsOutput(nep.format('YYYY MMMM DD, dddd'))
+                              } catch (err) {
+                                setBsOutput('Invalid Date')
+                              }
+                            } else {
+                              setBsOutput('')
+                            }
+                          }}
+                        />
+                        {bsOutput && (
+                          <div className="inline-result-badge" title={bsOutput}>
+                            <span className="result-prefix">BS:</span>
+                            <span className="result-val">{bsOutput}</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="inline-input-group">
+                        <div className="inline-selects">
+                          <select 
+                            value={bsYear}
+                            className="inline-select-field year-select"
+                            onChange={(e) => {
+                              const y = Number(e.target.value)
+                              setBsYear(y)
+                              updateAdOutput(y, bsMonth, bsDay)
+                            }}
+                          >
+                            {Array.from({ length: 91 }, (_, i) => 2000 + i).map(y => (
+                              <option key={y} value={y}>{y}</option>
+                            ))}
+                          </select>
+                          
+                          <select 
+                            value={bsMonth}
+                            className="inline-select-field month-select"
+                            onChange={(e) => {
+                              const m = Number(e.target.value)
+                              setBsMonth(m)
+                              updateAdOutput(bsYear, m, bsDay)
+                            }}
+                          >
+                            {nepaliMonths.map((m, idx) => (
+                              <option key={idx} value={idx}>{m}</option>
+                            ))}
+                          </select>
+                          
+                          <select 
+                            value={bsDay}
+                            className="inline-select-field day-select"
+                            onChange={(e) => {
+                              const d = Number(e.target.value)
+                              setBsDay(d)
+                              updateAdOutput(bsYear, bsMonth, d)
+                            }}
+                          >
+                            {Array.from({ length: 32 }, (_, i) => 1 + i).map(d => (
+                              <option key={d} value={d}>{d}</option>
+                            ))}
+                          </select>
+                        </div>
+                        {adOutput && (
+                          <div className="inline-result-badge" title={adOutput}>
+                            <span className="result-prefix">AD:</span>
+                            <span className="result-val">{adOutput}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="converter-skeleton-loader"></div>
+              )}
+            </div>
+
             {/* Top Right: Clock & Header Links */}
             <div className="header-info-socials">
               <div className="header-info-item">
@@ -107,17 +279,6 @@ export default function Header() {
                   rel="noopener noreferrer"
                 >
                   <i className="fa fa-facebook" aria-hidden="true"></i>
-                </a>
-                <a
-                  href={dateConverterHref}
-                  className="date-converter-link"
-                  title="BS to AD Date Converter"
-                  aria-label="Open BS to AD date converter"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <i className="fa fa-calendar" aria-hidden="true"></i>
-                  <span>BS to AD</span>
                 </a>
               </div>
             </div>
@@ -250,16 +411,7 @@ export default function Header() {
             >
               <i className="fa fa-facebook" aria-hidden="true"></i>
             </a>
-            <a
-              href={dateConverterHref}
-              className="date-converter-link"
-              aria-label="Open BS to AD date converter"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fa fa-calendar" aria-hidden="true"></i>
-              <span>BS to AD</span>
-            </a>
+
           </div>
         </div>
       </div>
