@@ -47,6 +47,20 @@ export interface GalleryImage {
   created_at: string
 }
 
+export interface StudyNote {
+  id: string
+  title: string
+  subject: string | null
+  class_level: string | null
+  file_url: string | null
+  description: string | null
+  content: string | null
+  is_active: boolean
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
 export interface PricingItem {
   id: string
   sn: number | null

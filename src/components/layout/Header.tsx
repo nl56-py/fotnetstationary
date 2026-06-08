@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+const businessHours = '7:00 AM - 7:00 PM'
+const facebookHref = 'https://www.facebook.com/p/Fonet-Stationery-Center-100083723779495/'
+const dateConverterHref = 'https://merotool.com/date-converter'
+
 export default function Header() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -86,25 +90,34 @@ export default function Header() {
               </Link>
             </div>
 
-            {/* Top Right: Clock & Social Icons */}
+            {/* Top Right: Clock & Header Links */}
             <div className="header-info-socials">
               <div className="header-info-item">
                 <i className="fa fa-clock-o" aria-hidden="true"></i>
-                <span>10-00.AM 6.00.PM</span>
+                <span>{businessHours}</span>
               </div>
               <span className="separator">|</span>
               <div className="header-socials">
-                <a href="https://www.facebook.com/p/Fonet-Stationery-Center-100083723779495/" title="Facebook" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-facebook"></i>
+                <a
+                  href={facebookHref}
+                  className="header-social-icon"
+                  title="Facebook"
+                  aria-label="Fonet Stationary Center on Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fa fa-facebook" aria-hidden="true"></i>
                 </a>
-                <a href="https://instagram.com/" title="Instagram" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-instagram"></i>
-                </a>
-                <a href="https://twitter.com/" title="Twitter" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-twitter"></i>
-                </a>
-                <a href="https://youtube.com/" title="Youtube" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-youtube-play"></i>
+                <a
+                  href={dateConverterHref}
+                  className="date-converter-link"
+                  title="BS to AD Date Converter"
+                  aria-label="Open BS to AD date converter"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fa fa-calendar" aria-hidden="true"></i>
+                  <span>BS to AD</span>
                 </a>
               </div>
             </div>
@@ -225,13 +238,28 @@ export default function Header() {
         <div className="mobile-menu-footer">
           <div className="mobile-info-item">
             <i className="fa fa-clock-o" aria-hidden="true"></i>
-            <span>10-00.AM 6.00.PM</span>
+            <span>{businessHours}</span>
           </div>
           <div className="mobile-socials">
-            <a href="https://www.facebook.com/p/Fonet-Stationery-Center-100083723779495/" target="_blank" rel="noopener noreferrer"><i className="fa fa-facebook"></i></a>
-            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer"><i className="fa fa-instagram"></i></a>
-            <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer"><i className="fa fa-twitter"></i></a>
-            <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer"><i className="fa fa-youtube-play"></i></a>
+            <a
+              href={facebookHref}
+              className="header-social-icon"
+              aria-label="Fonet Stationary Center on Facebook"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+            <a
+              href={dateConverterHref}
+              className="date-converter-link"
+              aria-label="Open BS to AD date converter"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="fa fa-calendar" aria-hidden="true"></i>
+              <span>BS to AD</span>
+            </a>
           </div>
         </div>
       </div>

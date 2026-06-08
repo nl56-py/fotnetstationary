@@ -1,5 +1,4 @@
 'use client'
-import { useState } from 'react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import GallerySection from '@/components/sections/GallerySection'

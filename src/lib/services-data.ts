@@ -266,6 +266,22 @@ export const services: ServiceData[] = [
     ],
   },
   {
+    slug: 'notary-service',
+    title: 'Notary Service',
+    icon: 'fa fa-certificate',
+    image: '/images/notary-public.jpg',
+    shortDesc: 'Notary, attestation, translation, valuation, and document preparation support.',
+    longDesc: 'Fonet Stationary Center provides practical notary and document support for customers who need certified translations, attested copies, affidavits, sponsorship letters, property valuation assistance, audit-related documentation, and paper preparation. We help you understand the required documents, prepare clear files, and submit the request through our notary service portal for timely follow-up.',
+    features: [
+      'Certified Nepali and English translation support',
+      'Notary and attested document stamp services',
+      'Affidavit, sponsorship, rent, and lease document support',
+      'Property valuation and audit documentation guidance',
+      'Document checklist review before submission',
+      'Online request option with document upload or drive link',
+    ],
+  },
+  {
     slug: 'students-materials',
     title: 'Students Materials',
     icon: 'fa fa-graduation-cap',

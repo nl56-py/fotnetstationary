@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   title: "Fonet Stationary Center - Today Write's for Tomorrow",
   description: "Fonet Stationary Center (FCI) is located at Bharatpur, Chitwan. We offer typing, printing, photocopy, lamination, flex print, visiting cards, PVC cards, and more.",
   keywords: "printing, photocopy, typing, stationary, Bharatpur, Chitwan, Nepal, FCI, Fonet",
+  icons: {
+    icon: [
+      { url: "/images/favicon.ico", sizes: "any" },
+      { url: "/images/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/images/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/images/apple-touch-icon.png",
+  },
   openGraph: {
     title: "Fonet Stationary Center",
     description: "Your one-stop printing and stationary solution in Bharatpur, Chitwan",

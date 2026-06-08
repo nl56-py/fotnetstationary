@@ -17,7 +17,7 @@ const defaultNotices: NoticeDownloadItem[] = [
   {
     id: 'n1',
     title: 'Important: Eid-ul-Fitr Holiday Announcement',
-    content: 'Please be informed that Fonet Stationary Center will remain closed on Eid-ul-Fitr holiday. Normal business hours (10:00 AM - 6:00 PM) will resume from the following day.',
+    content: 'Please be informed that Fonet Stationary Center will remain closed on Eid-ul-Fitr holiday. Normal business hours (7:00 AM - 7:00 PM) will resume from the following day.',
     type: 'Notice',
     file_url: null,
     created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()

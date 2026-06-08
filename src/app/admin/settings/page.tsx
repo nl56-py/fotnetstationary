@@ -9,6 +9,10 @@ const settingGroups = [
     keys: ['site_name', 'site_tagline', 'phone', 'mobile', 'email', 'fax', 'address', 'working_hours'],
   },
   {
+    title: 'Homepage Hero',
+    keys: ['hero_background_image_url'],
+  },
+  {
     title: 'Social Media',
     keys: ['facebook', 'youtube', 'twitter', 'instagram'],
   },
@@ -26,6 +30,7 @@ export default function AdminSettings() {
   const [settings, setSettings] = useState<SiteSetting[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [uploadingKey, setUploadingKey] = useState<string | null>(null)
 
   const supabase = createClient()
 
@@ -56,6 +61,27 @@ export default function AdminSettings() {
 
   const updateSetting = (key: string, value: string) => {
     setSettings(settings.map(s => s.key === key ? { ...s, value } : s))
+  }
+
+  const handleImageUpload = async (key: string, file: File) => {
+    setUploadingKey(key)
+    try {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `site/${key}-${Date.now()}.${fileExt}`
+
+      const { error } = await supabase.storage
+        .from('documents')
+        .upload(fileName, file, { upsert: true })
+
+      if (error) throw error
+
+      const { data } = supabase.storage.from('documents').getPublicUrl(fileName)
+      updateSetting(key, data.publicUrl)
+    } catch (err: any) {
+      alert('Image upload failed: ' + (err.message || 'Unknown error'))
+    } finally {
+      setUploadingKey(null)
+    }
   }
 
   const handleSave = async () => {
@@ -108,12 +134,41 @@ export default function AdminSettings() {
               const setting = settings.find(s => s.key === key)
               if (!setting) return null
               const isLong = ['about_text', 'history_text', 'mission_text', 'vision_text', 'banner_notice_text'].includes(key)
+              const isHeroImage = key === 'hero_background_image_url'
               return (
-                <div key={key} style={{ gridColumn: isLong ? 'span 2' : 'span 1' }}>
+                <div key={key} style={{ gridColumn: isLong || isHeroImage ? 'span 2' : 'span 1' }}>
                   <label style={{ display: 'block', fontSize: 13, color: '#666', marginBottom: 6, fontWeight: 500 }}>
                     {formatLabel(key)}
                   </label>
-                  {isLong ? (
+                  {isHeroImage ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      <input value={setting.value || ''} onChange={e => updateSetting(key, e.target.value)}
+                        placeholder="/images/slider1.jpg or uploaded image URL"
+                        style={{ width: '100%', padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }} />
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: 15, alignItems: 'start' }}>
+                        <div>
+                          <input
+                            type="file"
+                            accept="image/png,image/jpeg,image/webp,image/gif"
+                            onChange={e => {
+                              const file = e.target.files?.[0]
+                              if (file) handleImageUpload(key, file)
+                            }}
+                            style={{ width: '100%', padding: 9, border: '1px dashed #d0d0d0', borderRadius: 8, background: '#fafafa', fontSize: 13, boxSizing: 'border-box' }}
+                          />
+                          <p style={{ margin: '8px 0 0 0', color: '#777', fontSize: 12, lineHeight: 1.5 }}>
+                            Recommended size: 1920 x 760 px. The site displays the full image without cropping, so wide landscape images look best.
+                          </p>
+                          {uploadingKey === key && <p style={{ margin: '8px 0 0 0', color: '#3347B0', fontSize: 12 }}>Uploading image...</p>}
+                        </div>
+                        {setting.value && (
+                          <div style={{ border: '1px solid #eee', borderRadius: 8, padding: 8, background: '#fafafa' }}>
+                            <img src={setting.value} alt="Hero preview" style={{ width: '100%', height: 90, objectFit: 'contain', background: '#0d1e52', borderRadius: 6 }} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : isLong ? (
                     <textarea value={setting.value || ''} onChange={e => updateSetting(key, e.target.value)}
                       style={{ width: '100%', padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, height: 100, resize: 'vertical', boxSizing: 'border-box' }} />
                   ) : (

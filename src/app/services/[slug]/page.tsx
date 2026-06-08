@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const service = getServiceBySlug(slug)
   if (!service) return { title: 'Service Not Found' }
   return {
-    title: `${service.title} — Fonet Stationary Center`,
+    title: `${service.title} - Fonet Stationary Center`,
     description: service.shortDesc,
   }
 }
@@ -27,6 +27,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
   const { slug } = await params
   const service = getServiceBySlug(slug)
   if (!service) notFound()
+  const isNotaryService = service.slug === 'notary-service'
 
   // Find related services (exclude current)
   const related = services.filter((s) => s.slug !== slug).slice(0, 4)
@@ -118,11 +119,15 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                 {/* CTA Banner */}
                 <div className="sdc-cta-banner">
                   <div className="sdc-cta-text">
-                    <h4>Ready to get started?</h4>
-                    <p>Fill out the booking form and we&apos;ll contact you within 24 hours</p>
+                    <h4>{isNotaryService ? 'Need notary or translation support?' : 'Ready to get started?'}</h4>
+                    <p>
+                      {isNotaryService
+                        ? 'Open the notary request portal to upload documents or share a drive link.'
+                        : "Fill out the booking form and we'll contact you within 24 hours"}
+                    </p>
                   </div>
-                  <a href="#booking" className="sdc-cta-btn">
-                    <i className="fa fa-arrow-right"></i> Book Now
+                  <a href={isNotaryService ? '/notary' : '#booking'} className="sdc-cta-btn">
+                    <i className="fa fa-arrow-right"></i> {isNotaryService ? 'Submit Request' : 'Book Now'}
                   </a>
                 </div>
               </div>
@@ -190,7 +195,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                     <i className="fa fa-clock-o"></i> Opening Hours
                   </h4>
                   <ul className="sdc-hours-list">
-                    <li><span>Sunday - Friday</span><span>10:00 AM - 6:00 PM</span></li>
+                    <li><span>Sunday - Friday</span><span>7:00 AM - 7:00 PM</span></li>
                     <li className="closed"><span>Saturday</span><span>Closed</span></li>
                   </ul>
                 </div>

@@ -4,20 +4,27 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
+import Placeholder from '@tiptap/extension-placeholder'
 
 interface RichTextEditorProps {
   content: string
   onChange: (content: string) => void
+  minHeight?: number
+  placeholder?: string
 }
 
-export default function RichTextEditor({ content, onChange }: RichTextEditorProps) {
+export default function RichTextEditor({ content, onChange, minHeight = 300, placeholder }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
       Link.configure({ openOnClick: false }),
       Image,
+      Placeholder.configure({
+        placeholder: placeholder || 'Write content...',
+      }),
     ],
     content,
+    immediatelyRender: false,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML())
     },
@@ -88,6 +95,37 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
         </button>
         <button
           type="button"
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          style={{
+            background: editor.isActive('orderedList') ? '#e0e0e0' : 'none',
+            border: '1px solid #ddd', borderRadius: 4, padding: '4px 10px', cursor: 'pointer', fontSize: 13
+          }}
+        >
+          1.
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            const previousUrl = editor.getAttributes('link').href
+            const url = window.prompt('URL', previousUrl)
+
+            if (url === null) return
+            if (url === '') {
+              editor.chain().focus().extendMarkRange('link').unsetLink().run()
+              return
+            }
+
+            editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+          }}
+          style={{
+            background: editor.isActive('link') ? '#e0e0e0' : 'none',
+            border: '1px solid #ddd', borderRadius: 4, padding: '4px 10px', cursor: 'pointer', fontSize: 13
+          }}
+        >
+          Link
+        </button>
+        <button
+          type="button"
           onClick={() => {
             const url = window.prompt('URL')
             if (url) {
@@ -103,7 +141,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
       </div>
       <EditorContent 
         editor={editor} 
-        style={{ padding: '16px', minHeight: '300px', outline: 'none', cursor: 'text' }}
+        style={{ padding: '16px', minHeight, outline: 'none', cursor: 'text' }}
         className="prose max-w-none"
       />
     </div>

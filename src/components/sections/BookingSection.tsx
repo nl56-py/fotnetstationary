@@ -128,7 +128,7 @@ export default function BookingSection() {
                   <div style={{ marginBottom: 20 }}>
                     <h4 style={{ color: '#222', marginBottom: 8 }}>What are your working hours?</h4>
                     <p style={{ color: '#666', fontSize: 14, lineHeight: 1.8 }}>
-                      We are open from 10:00 AM to 6:00 PM, Monday to Saturday. We are closed on Sundays
+                      We are open from 7:00 AM to 7:00 PM, Monday to Saturday. We are closed on Sundays
                       and public holidays.
                     </p>
                   </div>

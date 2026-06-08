@@ -259,7 +259,8 @@ INSERT INTO site_settings (key, value) VALUES
 ('twitter', 'https://twitter.com/'),
 ('instagram', 'https://instagram.com/'),
 ('fax', '+977-056-526307'),
-('working_hours', '10:00 AM - 6:00 PM'),
+('working_hours', '7:00 AM - 7:00 PM'),
+('hero_background_image_url', '/images/slider1.jpg'),
 ('about_text', 'Fonet Stationary Center (FCI) is located at central location of Bharatpur, in front of Saptagandaki Campus. We are here to cater you all required services for Computer such as typing, printing, photocopy and other related tasks.'),
 ('history_text', 'FCI was established in 2070 B.S. We have earned trust of people from all Chitwan and neighbor for quality and quick service. Fonet Stationary Center is Business Enterprise, is a registered and licensed business enterprise in the Business Service Centers that will operate a standard business services firm.'),
 ('mission_text', 'Our mission is to establish a standard business services center cum copy shop that will make available a wide range of services and products as it relates to the service offerings in the business center services industry at affordable prices to the customer and other locations.'),
@@ -440,13 +441,19 @@ CREATE TABLE IF NOT EXISTS notes (
   title TEXT NOT NULL,
   subject TEXT,
   class_level TEXT,
-  file_url TEXT NOT NULL,
+  file_url TEXT,
   description TEXT,
+  content TEXT,
   is_active BOOLEAN DEFAULT TRUE,
   sort_order INT DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Keep existing projects compatible when this schema is re-run after notes
+-- already existed with file-only content.
+ALTER TABLE notes ADD COLUMN IF NOT EXISTS content TEXT;
+ALTER TABLE notes ALTER COLUMN file_url DROP NOT NULL;
 
 -- Enable RLS and add policies for notes
 ALTER TABLE notes ENABLE ROW LEVEL SECURITY;
@@ -476,5 +483,3 @@ INSERT INTO site_settings (key, value) VALUES
 ('banner_notice_text', 'Welcome to Fonet Stationery Center! Check out our new Notary services.'),
 ('banner_notice_image_url', '')
 ON CONFLICT (key) DO NOTHING;
-
-

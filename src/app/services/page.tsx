@@ -4,8 +4,8 @@ import { services } from '@/lib/services-data'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Our Services — Fonet Stationary Center',
-  description: 'Explore the full range of services offered by Fonet Stationary Center including thesis typing, photocopy, printing, lamination, visiting cards, PVC cards, and more.',
+  title: 'Our Services - Fonet Stationary Center',
+  description: 'Explore the full range of services offered by Fonet Stationary Center including thesis typing, photocopy, printing, lamination, notary service, visiting cards, PVC cards, and more.',
 }
 
 export default function ServicesPage() {
@@ -30,7 +30,7 @@ export default function ServicesPage() {
               <h2>ALL SERVICES</h2>
             </div>
             <p className="sl-subtitle">
-              From thesis typing and printing to custom T-shirts and PVC cards — we are your one-stop solution for all printing and stationary needs.
+              From thesis typing and printing to notary support, custom T-shirts, and PVC cards, we are your one-stop solution for printing, document, and stationery needs.
             </p>
           </div>
 

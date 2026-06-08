@@ -100,7 +100,7 @@ export default function ContactPage() {
                   { icon: 'fa fa-phone', label: 'Phone', value: '056-526307 | 9845220077' },
                   { icon: 'fa fa-envelope-o', label: 'Email', value: 'fcichitwan@gmail.com' },
                   { icon: 'fa fa-fax', label: 'Fax', value: '+977-056-526307' },
-                  { icon: 'fa fa-clock-o', label: 'Working Hours', value: '10:00 AM - 6:00 PM (Mon - Sat)' },
+                  { icon: 'fa fa-clock-o', label: 'Working Hours', value: '7:00 AM - 7:00 PM (Mon - Sat)' },
                 ].map((item, idx) => (
                   <div key={idx} style={{
                     display: 'flex', gap: 15, padding: 15, marginBottom: 10,
