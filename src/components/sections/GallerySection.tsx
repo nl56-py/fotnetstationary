@@ -27,7 +27,7 @@ export default function GallerySection() {
   const [loading, setLoading] = useState(true)
   
   // View toggle and slider states
-  const [viewMode, setViewMode] = useState<'grid' | 'slider'>('grid')
+  const [viewMode, setViewMode] = useState<'grid' | 'slider'>('slider')
   const [slideIndex, setSlideIndex] = useState(0)
   const [itemsToShow, setItemsToShow] = useState(4)
 

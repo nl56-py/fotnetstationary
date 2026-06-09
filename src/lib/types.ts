@@ -31,6 +31,7 @@ export interface Service {
   long_description: string | null
   icon: string
   image_url: string | null
+  features: string[] | null
   sort_order: number
   is_active: boolean
   created_at: string

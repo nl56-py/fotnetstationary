@@ -1,7 +1,8 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import NepaliDate from 'nepali-date-converter'
 
 const businessHours = '7:00 AM - 7:00 PM'
@@ -18,6 +19,14 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
+
+  // Search States
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<{blogs: any[], services: any[], notices: any[]}>({ blogs: [], services: [], notices: [] })
+  const [searching, setSearching] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Date Converter States
   const [mounted, setMounted] = useState(false)
@@ -37,8 +46,22 @@ export default function Header() {
   const [adOutput, setAdOutput] = useState('')
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50)
-    window.addEventListener('scroll', handleScroll)
+    let ticking = false
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const y = window.scrollY
+          setScrolled((prev) => {
+            if (!prev && y > 60) return true
+            if (prev && y < 30) return false
+            return prev
+          })
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -88,6 +111,48 @@ export default function Header() {
   const toggleMobileDropdown = (e: React.MouseEvent) => {
     e.preventDefault()
     setMobileDropdownOpen(!mobileDropdownOpen)
+  }
+
+  const openSearch = () => {
+    setSearchOpen(true)
+    setTimeout(() => searchInputRef.current?.focus(), 100)
+  }
+
+  const closeSearch = () => {
+    setSearchOpen(false)
+    setSearchQuery('')
+    setSearchResults({ blogs: [], services: [], notices: [] })
+  }
+
+  const handleSearch = useCallback(async (query: string) => {
+    if (query.length < 2) {
+      setSearchResults({ blogs: [], services: [], notices: [] })
+      return
+    }
+    setSearching(true)
+    try {
+      const supabase = createClient()
+      const pattern = `%${query}%`
+      const [blogsRes, servicesRes, noticesRes] = await Promise.all([
+        supabase.from('blog_posts').select('id, title, slug, excerpt').eq('is_published', true).or(`title.ilike.${pattern},excerpt.ilike.${pattern}`).limit(5),
+        supabase.from('services').select('id, title, slug, description').eq('is_active', true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(5),
+        supabase.from('notices_downloads').select('id, title, type').eq('is_active', true).ilike('title', pattern).limit(5),
+      ])
+      setSearchResults({
+        blogs: blogsRes.data || [],
+        services: servicesRes.data || [],
+        notices: noticesRes.data || [],
+      })
+    } catch (err) {
+      console.error('Search error:', err)
+    }
+    setSearching(false)
+  }, [])
+
+  const onSearchInput = (val: string) => {
+    setSearchQuery(val)
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current)
+    searchTimerRef.current = setTimeout(() => handleSearch(val), 300)
   }
 
   interface NavItem {
@@ -340,9 +405,94 @@ export default function Header() {
                 })}
               </ul>
             </nav>
+            <button
+              className="nav-search-btn"
+              onClick={openSearch}
+              aria-label="Search"
+              style={{
+                background: 'rgba(255,255,255,0.15)',
+                border: 'none',
+                borderRadius: '50%',
+                width: 36,
+                height: 36,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                marginLeft: 8,
+                flexShrink: 0,
+                transition: 'background 0.3s',
+              }}
+            >
+              <i className="fa fa-search" style={{ color: '#fff', fontSize: 15 }}></i>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Search Overlay */}
+      {searchOpen && (
+        <div className="search-overlay" onClick={closeSearch}>
+          <div className="search-overlay-content" onClick={e => e.stopPropagation()}>
+            <button className="search-close-btn" onClick={closeSearch}>&times;</button>
+            <div className="search-input-wrapper">
+              <i className="fa fa-search search-input-icon"></i>
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search blogs, services, notices..."
+                value={searchQuery}
+                onChange={e => onSearchInput(e.target.value)}
+                className="search-input"
+              />
+            </div>
+            {searching && <div style={{ textAlign: 'center', padding: 20, color: '#888' }}>Searching...</div>}
+            {!searching && searchQuery.length >= 2 && (
+              <div className="search-results">
+                {searchResults.services.length > 0 && (
+                  <div className="search-results-group">
+                    <h5 className="search-group-title"><i className="fa fa-cogs"></i> Services</h5>
+                    {searchResults.services.map((s: any) => (
+                      <Link key={s.id} href={`/services/${s.slug}`} className="search-result-item" onClick={closeSearch}>
+                        <strong>{s.title}</strong>
+                        {s.description && <span>{s.description.substring(0, 80)}...</span>}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                {searchResults.blogs.length > 0 && (
+                  <div className="search-results-group">
+                    <h5 className="search-group-title"><i className="fa fa-newspaper-o"></i> Blog Posts</h5>
+                    {searchResults.blogs.map((b: any) => (
+                      <Link key={b.id} href={`/blog/${b.slug}`} className="search-result-item" onClick={closeSearch}>
+                        <strong>{b.title}</strong>
+                        {b.excerpt && <span>{b.excerpt.substring(0, 80)}...</span>}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                {searchResults.notices.length > 0 && (
+                  <div className="search-results-group">
+                    <h5 className="search-group-title"><i className="fa fa-bell"></i> Notices</h5>
+                    {searchResults.notices.map((n: any) => (
+                      <Link key={n.id} href="/notices" className="search-result-item" onClick={closeSearch}>
+                        <strong>{n.title}</strong>
+                        <span className="search-result-badge">{n.type}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                {searchResults.blogs.length === 0 && searchResults.services.length === 0 && searchResults.notices.length === 0 && (
+                  <div style={{ textAlign: 'center', padding: 30, color: '#888' }}>
+                    <i className="fa fa-search" style={{ fontSize: 24, marginBottom: 10, display: 'block', opacity: 0.5 }}></i>
+                    No results found for &ldquo;{searchQuery}&rdquo;
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Mobile Menu Drawer Overlay */}
       <div

@@ -81,6 +81,8 @@ export default function Footer() {
                       <li><i className="fa fa-map-marker" style={{ marginRight: 8, color: '#3347B0' }}></i> Bharatpur, Saptagandaki Chowk, Chitwan</li>
                       <li><i className="fa fa-phone" style={{ marginRight: 8, color: '#3347B0' }}></i> 056-526307</li>
                       <li><i className="fa fa-mobile" style={{ marginRight: 8, color: '#3347B0' }}></i> 9845220077</li>
+                      <li><i className="fa fa-mobile" style={{ marginRight: 8, color: '#3347B0' }}></i> 9765028501</li>
+                      <li><i className="fa fa-mobile" style={{ marginRight: 8, color: '#3347B0' }}></i> 9765028500</li>
                       <li><i className="fa fa-envelope-o" style={{ marginRight: 8, color: '#3347B0' }}></i> fcichitwan@gmail.com</li>
                       <li><i className="fa fa-fax" style={{ marginRight: 8, color: '#3347B0' }}></i> +977-056-526307</li>
                     </ul>
@@ -114,7 +116,7 @@ export default function Footer() {
         onClick={scrollToTop}
         style={{ cursor: 'pointer' }}
       >
-        &#10148;
+        <i className="fa fa-chevron-up"></i>
       </a>
 
       {/* WhatsApp Floating Widget */}

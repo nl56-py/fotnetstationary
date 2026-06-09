@@ -97,7 +97,7 @@ export default function ContactPage() {
 
                 {[
                   { icon: 'fa fa-map-marker', label: 'Address', value: 'Bharatpur Metropolitan City Ward No.10,\nSaptagandaki Chowk, Chitwan, Nepal' },
-                  { icon: 'fa fa-phone', label: 'Phone', value: '056-526307 | 9845220077' },
+                  { icon: 'fa fa-phone', label: 'Phone', value: '056-526307 | 9845220077\n9765028501 | 9765028500' },
                   { icon: 'fa fa-envelope-o', label: 'Email', value: 'fcichitwan@gmail.com' },
                   { icon: 'fa fa-fax', label: 'Fax', value: '+977-056-526307' },
                   { icon: 'fa fa-clock-o', label: 'Working Hours', value: '7:00 AM - 7:00 PM (Mon - Sat)' },
