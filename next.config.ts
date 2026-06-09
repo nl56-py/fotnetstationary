@@ -30,7 +30,7 @@ const securityHeaders = [
       "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
       "img-src 'self' data: blob: https://*.supabase.co https://drive.google.com",
       "media-src 'self' https://*.supabase.co",
-      "frame-src https://www.youtube.com https://youtube.com https://drive.google.com https://www.facebook.com https://www.instagram.com https://www.tiktok.com",
+      "frame-src https://www.google.com https://www.youtube.com https://youtube.com https://drive.google.com https://www.facebook.com https://www.instagram.com https://www.tiktok.com",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
       "object-src 'none'",
       "base-uri 'self'",
