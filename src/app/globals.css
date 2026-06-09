@@ -1721,7 +1721,7 @@ ul { list-style: disc; }
   background-color: #ffffff;
   z-index: 2000;
   box-shadow: -8px 0 30px rgba(0,0,0,0.15);
-  display: flex;
+  display: none; /* Hidden by default on desktop to prevent horizontal scrolling */
   flex-direction: column;
   transition: right 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
 }
@@ -1905,6 +1905,10 @@ ul { list-style: disc; }
     display: block;
     order: 2;
     margin-left: auto;
+  }
+
+  .menu-wrapper-custom {
+    display: flex; /* Only display flex on mobile viewport */
   }
 
   .header-date-converter-direct {

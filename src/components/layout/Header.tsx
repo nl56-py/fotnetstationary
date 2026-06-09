@@ -23,7 +23,7 @@ export default function Header() {
   // Search States
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<{blogs: any[], services: any[], notices: any[]}>({ blogs: [], services: [], notices: [] })
+  const [searchResults, setSearchResults] = useState<{blogs: any[], services: any[], notices: any[], notes: any[]}>({ blogs: [], services: [], notices: [], notes: [] })
   const [searching, setSearching] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -121,27 +121,29 @@ export default function Header() {
   const closeSearch = () => {
     setSearchOpen(false)
     setSearchQuery('')
-    setSearchResults({ blogs: [], services: [], notices: [] })
+    setSearchResults({ blogs: [], services: [], notices: [], notes: [] })
   }
 
   const handleSearch = useCallback(async (query: string) => {
     if (query.length < 2) {
-      setSearchResults({ blogs: [], services: [], notices: [] })
+      setSearchResults({ blogs: [], services: [], notices: [], notes: [] })
       return
     }
     setSearching(true)
     try {
       const supabase = createClient()
       const pattern = `%${query}%`
-      const [blogsRes, servicesRes, noticesRes] = await Promise.all([
+      const [blogsRes, servicesRes, noticesRes, notesRes] = await Promise.all([
         supabase.from('blog_posts').select('id, title, slug, excerpt').eq('is_published', true).or(`title.ilike.${pattern},excerpt.ilike.${pattern}`).limit(5),
         supabase.from('services').select('id, title, slug, description').eq('is_active', true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(5),
         supabase.from('notices_downloads').select('id, title, type').eq('is_active', true).ilike('title', pattern).limit(5),
+        supabase.from('notes').select('id, title, subject, class_level').eq('is_active', true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(5),
       ])
       setSearchResults({
         blogs: blogsRes.data || [],
         services: servicesRes.data || [],
         notices: noticesRes.data || [],
+        notes: notesRes.data || [],
       })
     } catch (err) {
       console.error('Search error:', err)
@@ -482,7 +484,18 @@ export default function Header() {
                     ))}
                   </div>
                 )}
-                {searchResults.blogs.length === 0 && searchResults.services.length === 0 && searchResults.notices.length === 0 && (
+                {searchResults.notes && searchResults.notes.length > 0 && (
+                  <div className="search-results-group">
+                    <h5 className="search-group-title"><i className="fa fa-book"></i> Academic Notes</h5>
+                    {searchResults.notes.map((n: any) => (
+                      <Link key={n.id} href="/notes" className="search-result-item" onClick={closeSearch}>
+                        <strong>{n.title}</strong>
+                        {n.subject && <span style={{ fontSize: 12, color: '#666', marginTop: 4 }}>{n.subject} ({n.class_level || 'All Levels'})</span>}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                {searchResults.blogs.length === 0 && searchResults.services.length === 0 && searchResults.notices.length === 0 && (!searchResults.notes || searchResults.notes.length === 0) && (
                   <div style={{ textAlign: 'center', padding: 30, color: '#888' }}>
                     <i className="fa fa-search" style={{ fontSize: 24, marginBottom: 10, display: 'block', opacity: 0.5 }}></i>
                     No results found for &ldquo;{searchQuery}&rdquo;
