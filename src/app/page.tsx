@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import HeroSlider from '@/components/sections/HeroSlider'
@@ -5,6 +6,24 @@ import ServicesSection from '@/components/sections/ServicesSection'
 import AboutSection from '@/components/sections/AboutSection'
 import FeaturesSection from '@/components/sections/FeaturesSection'
 import ContactInfoSection from '@/components/sections/ContactInfoSection'
+
+export const metadata: Metadata = {
+  title: "Fonet Stationary Center - Printing, Photocopy & Notary in Chitwan",
+  description: "Fonet Stationary Center (FCI) offers thesis typing, photocopy center, certified notary translation, document attestation, PVC cards, and stationery in Bharatpur, Chitwan. Visit us in front of Saptagandaki Campus.",
+  openGraph: {
+    title: "Fonet Stationary Center - Printing, Photocopy & Notary in Chitwan",
+    description: "Fonet Stationary Center (FCI) offers thesis typing, photocopy center, certified notary translation, document attestation, PVC cards, and stationery in Bharatpur, Chitwan.",
+    url: "https://fonet.com.np/",
+    images: [
+      {
+        url: "/images/fonet logo.PNG",
+        width: 1200,
+        height: 630,
+        alt: "Fonet Stationary Center Logo",
+      }
+    ],
+  }
+}
 
 import GallerySection from '@/components/sections/GallerySection'
 import CounterSection from '@/components/sections/CounterSection'
@@ -87,8 +106,63 @@ function SpecializedServicesSection() {
 }
 
 export default function HomePage() {
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "ProfessionalService"],
+    "name": "Fonet Stationary Center",
+    "alternateName": ["FCI Chitwan", "Fonet Stationary"],
+    "description": "Fonet Stationary Center (FCI) in Bharatpur, Chitwan provides professional printing, high-speed photocopying, certified notary translations, document attestation, PVC ID card printing, and thesis typing.",
+    "url": "https://fonet.com.np",
+    "logo": "https://fonet.com.np/images/fonet logo.PNG",
+    "image": "https://fonet.com.np/images/About3.jpg",
+    "telephone": "+977-056-526307",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Saptagandaki Chowk, Bharatpur Ward No. 10",
+      "addressLocality": "Bharatpur",
+      "addressRegion": "Chitwan, Bagmati Province",
+      "postalCode": "44200",
+      "addressCountry": "Nepal"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 27.6629,
+      "longitude": 84.3826
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    "sameAs": [
+      "https://www.facebook.com/p/Fonet-Stationery-Center-100083723779495/"
+    ]
+  }
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Fonet Stationary Center",
+    "url": "https://fonet.com.np",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://fonet.com.np/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+
   return (
     <div className="main-container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
       <Header />
       
       {/* Important Announcement Notice Popup on Homepage load */}

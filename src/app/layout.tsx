@@ -3,9 +3,30 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://fonet.com.np"),
   title: "Fonet Stationary Center - Today Write's for Tomorrow",
-  description: "Fonet Stationary Center (FCI) is located at Bharatpur, Chitwan. We offer typing, printing, photocopy, lamination, flex print, visiting cards, PVC cards, and more.",
-  keywords: "printing, photocopy, typing, stationary, Bharatpur, Chitwan, Nepal, FCI, Fonet",
+  description: "Fonet Stationary Center (FCI) at Bharatpur, Chitwan offers expert thesis typing, high-speed photocopying, notary and certified translation, PVC cards, visiting cards, custom printing, and study materials.",
+  keywords: "stationary Chitwan, printing Bharatpur, photocopy Saptagandaki, thesis typing Chitwan, notary translation Bharatpur, document attestation Nepal, PVC ID card Chitwan, visiting card print Bharatpur, flex print Chitwan, self stamp Chitwan, book binding Bharatpur, academic notes SEE",
+  authors: [{ name: "Shubarna Neupane" }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: "https://fonet.com.np/",
+    languages: {
+      "en": "https://fonet.com.np/?lang=en",
+      "ne": "https://fonet.com.np/?lang=ne",
+      "x-default": "https://fonet.com.np/",
+    },
+  },
   icons: {
     icon: [
       { url: "/images/favicon.ico", sizes: "any" },
@@ -15,9 +36,36 @@ export const metadata: Metadata = {
     apple: "/images/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Fonet Stationary Center",
-    description: "Your one-stop printing and stationary solution in Bharatpur, Chitwan",
+    title: "Fonet Stationary Center - Today Write's for Tomorrow",
+    description: "Your one-stop printing, document preparation, and certified notary translation solution in Bharatpur, Chitwan. Serving students and businesses since 2070 B.S.",
+    url: "https://fonet.com.np/",
+    siteName: "Fonet Stationary Center",
+    locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/images/fonet logo.PNG",
+        width: 1200,
+        height: 630,
+        alt: "Fonet Stationary Center Logo - Bharatpur, Chitwan",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fonet Stationary Center - Today Write's for Tomorrow",
+    description: "Fonet Stationary Center (FCI) offers professional typing, printing, lamination, certified notary translation, and stationary in Bharatpur, Chitwan.",
+    images: ["/images/fonet logo.PNG"],
+  },
+  other: {
+    "geo.region": "NP-3",
+    "geo.placename": "Bharatpur",
+    "geo.position": "27.6629;84.3826",
+    "ICBM": "27.6629, 84.3826",
+    "DC.title": "Fonet Stationary Center - Printing & Notary Services in Bharatpur Chitwan",
+    "DC.creator": "Shubarna Neupane",
+    "DC.subject": "Stationary, Printing, Photocopy, Notary Translation, Academic Typing, PVC Card, Visiting Card",
+    "DC.description": "Leading stationary and document services center in Bharatpur, Chitwan, Nepal. Offering typing, printing, photocopy, lamination, visiting cards, PVC cards, and notary translation.",
   },
 };
 

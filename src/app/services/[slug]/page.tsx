@@ -22,23 +22,49 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const supabase = await createServerSupabaseClient()
   const { data: dbService } = await supabase
     .from('services')
-    .select('title, description')
+    .select('title, description, image_url')
     .eq('slug', slug)
     .eq('is_active', true)
     .single()
 
+  let title = 'Service Not Found'
+  let description = ''
+  let imageUrl = '/images/servicesimg.jpg'
+
   if (dbService) {
-    return {
-      title: `${dbService.title} - Fonet Stationary Center`,
-      description: dbService.description || '',
+    title = `${dbService.title} - Fonet Stationary Center`
+    description = dbService.description || ''
+    imageUrl = dbService.image_url || '/images/servicesimg.jpg'
+  } else {
+    const staticService = getStaticService(slug)
+    if (staticService) {
+      title = `${staticService.title} - Fonet Stationary Center`
+      description = staticService.shortDesc
+      imageUrl = staticService.image
     }
   }
 
-  const staticService = getStaticService(slug)
-  if (!staticService) return { title: 'Service Not Found' }
   return {
-    title: `${staticService.title} - Fonet Stationary Center`,
-    description: staticService.shortDesc,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `https://fonet.com.np/services/${slug}`,
+      images: [
+        {
+          url: imageUrl,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+    },
   }
 }
 
@@ -115,8 +141,44 @@ export default async function ServiceDetailPage({ params }: PageProps) {
     })
   )
 
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.title,
+    "description": service.shortDesc || service.longDesc,
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "Fonet Stationary Center",
+      "image": "https://fonet.com.np/images/fonet logo.PNG",
+      "telephone": "+977-056-526307",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Saptagandaki Chowk, Bharatpur Ward No. 10",
+        "addressLocality": "Bharatpur",
+        "addressRegion": "Chitwan",
+        "postalCode": "44200",
+        "addressCountry": "Nepal"
+      }
+    },
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Bharatpur"
+      },
+      {
+        "@type": "City",
+        "name": "Chitwan"
+      }
+    ],
+    "image": service.image.startsWith('/') ? `https://fonet.com.np${service.image}` : service.image,
+  }
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
       <Header />
 
       {/* Hero Banner with Service Image */}

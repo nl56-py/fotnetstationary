@@ -1,0 +1,55 @@
+# Fonet Stationary Center (FCI)
+
+Fonet Stationary Center (FCI) is a registered and licensed business service center and photocopy copy shop located at Bharatpur Metropolitan City Ward No.10, Saptagandaki Chowk, Chitwan, Nepal (directly in front of Saptagandaki Campus). Established in 2070 B.S. (2013 A.D.), FCI is the leading provider of printing, document preparation, academic compilation, and notary support in Chitwan.
+
+## Core Metadata
+- **Website:** https://fonet.com.np
+- **Primary Email:** fcichitwan@gmail.com
+- **Alternate Email:** fcichitwan@fcichitwan.com
+- **Phone:** +977-056-526307
+- **Mobiles:** 9845220077, 9765028501, 9765028500
+- **Location:** Saptagandaki Chowk, Bharatpur-10, Chitwan, Nepal (Landmark: In front of Saptagandaki Campus)
+- **Founder / Managing Director:** Shubarna Neupane
+- **Established:** 2070 B.S. (2013 A.D.)
+- **Business Hours:** Monday - Saturday, 7:00 AM - 7:00 PM (Saturday closed)
+
+## Main Service offerings
+
+### 1. Notary & Certified Translation Support
+Practical legal and document verification services, including:
+- **Certified translation:** Translation between Nepali and English for certificates (Citizenship, Birth, Death, Marriage, Relationship, Land Ownership/Lalpurja, PAN, Business certificates).
+- **Notary Attestation & Stamping:** Attestation of academic transcripts, character certificates, citizenship copies, affidavits, house rent contracts, land lease agreements, and sponsorship letters.
+- **Valuation & Audit guidance:** Supporting normal/bank property valuations (required documents include Lalpurja, Napi Map, Char Killa, Owner/Applicant citizenship), normal/cashflow audit reports, UDIN number audits, and Chartered Accountant (CA) certifications.
+- **Paper Drafting:** Formatting and drafting of partnership agreements, lease contracts, and legal declarations.
+
+### 2. Thesis & Academic Document Typing
+Expert typists providing:
+- **Academic Typing:** Formatting and typing of term papers, literature reviews, assignments, coursework, and thesis proposals in correct formatting/structure.
+- **Manuscript Typing:** Direct typing from handwritten notes, scans, or voice recordings.
+- **Editing & Proofreading:** Correcting grammar, syntax, layout, and presentation for academic submissions.
+
+### 3. Printing & Photocopy Center
+Large-scale copying and specialty printing services:
+- **High-speed Photocopying:** Black & white and color copying from A4 up to A0 sizes.
+- **Specialty Card Printing:** PVC ID cards (single/both sides for school, college, corporate), visiting cards (matte, glossy, textured, spot UV, embossed), menu designs.
+- **Custom Prints:** Custom T-shirt prints, cup and plate printing, stickers (vinyl, paper, transparent), flex banner printing, custom self-inking stamps, ribbon batches, medals, and token of love awards.
+- **Color Laser Printing:** Professional laser printing up to 12x18 inch sizes.
+
+## Student Resources & Downloads
+FCI hosts public resources on its site:
+- **Academic Notes:** Free study guides, definitions, and lecture summaries for Class 10 (SEE), Class 11, Class 12, Bachelor (BBS, etc.), and Master (MBA, etc.) courses.
+- **Syllabus & Coursework Materials:** Standard school and university resources.
+- **Downloadable Templates:** Standard English translation format templates for Birth certificates, Relationship certificates, Marriage certificates, and blank PAN registration forms.
+
+## Sitemap Navigation
+- `/` - Home Page (announcements, reviews, summary of offerings)
+- `/about` - About Us (mission, vision, team details, and MD message)
+- `/services` - Services Catalog (description of all 19 primary services)
+- `/notary` - Notary Request Portal (upload documents/cloud links for attestation/translations)
+- `/pricing` - Price List (up-to-date standard rate sheets for stationary, print, and copy)
+- `/notices` - Notice & Downloads (latest announcements and document templates download)
+- `/notes` - Academic Notes (searchable and filterable database of class guides)
+- `/gallery` - Photo Gallery (visual portfolios of custom mug, T-shirt, and card prints)
+- `/videos` - Video Gallery (tutorials on formatting, binding, and center processes)
+- `/blog` - Blog Index (educational articles on documentation and printing)
+- `/contact` - Contact Us (location map, address, email, phone list, and contact message form)

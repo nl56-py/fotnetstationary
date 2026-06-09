@@ -67,6 +67,11 @@ export default function HeroSlider() {
     fetchHeroImage()
   }, [])
 
+  const isTiled = heroImage.toLowerCase().includes('tile') || 
+                  heroImage.toLowerCase().includes('pattern') || 
+                  heroImage.toLowerCase().includes('repeat') || 
+                  heroImage.toLowerCase().includes('bg');
+
   return (
     <div className="slider_section" id="slider">
       <div className="owl-slider">
@@ -74,18 +79,21 @@ export default function HeroSlider() {
           {slides.map((slide, idx) => (
             <div
               key={idx}
-              className="item"
+              className={`item ${isTiled ? 'tile-bg' : ''}`}
               style={{
                 display: idx === currentSlide ? 'block' : 'none',
                 position: 'relative',
+                backgroundImage: isTiled ? `url(${slide.image})` : 'none',
               }}
             >
               <div className="slider_gradiant"></div>
-              <img
-                className="slide-mainimg"
-                alt={slide.altText}
-                src={slide.image}
-              />
+              {!isTiled && (
+                <img
+                  className="slide-mainimg"
+                  alt={slide.altText}
+                  src={slide.image}
+                />
+              )}
               <div className="carousel-caption">
                 <div className="title" style={{ whiteSpace: 'pre-line' }}>
                   {slide.title}

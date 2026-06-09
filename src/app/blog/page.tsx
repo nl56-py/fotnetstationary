@@ -1,9 +1,15 @@
+import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
 export const revalidate = 0; // Disable static caching so blogs are always up-to-date
+
+export const metadata: Metadata = {
+  title: "Our Blog - Fonet Stationary Center",
+  description: "Read helpful articles on academic thesis writing, legal translation formats, notary requirements in Nepal, custom mug printing, and stationery advice.",
+}
 
 export default async function BlogPage() {
   const supabase = await createServerSupabaseClient()
