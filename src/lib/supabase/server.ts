@@ -13,9 +13,12 @@ export async function createServerSupabaseClient() {
         },
         setAll(cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
+            cookiesToSet.forEach(({ name, value, options }) => {
+              const sessionOptions = { ...options }
+              delete sessionOptions.maxAge
+              delete sessionOptions.expires
+              cookieStore.set(name, value, sessionOptions)
+            })
           } catch {
             // Server Component — ignore
           }

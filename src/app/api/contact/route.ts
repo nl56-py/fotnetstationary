@@ -1,35 +1,51 @@
 import { NextResponse } from 'next/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { validateString, validateEmail, validatePhone } from '@/lib/validation'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { first_name, last_name, phone, email, message } = body
 
-    if (!first_name) {
-      return NextResponse.json({ error: 'First name is required' }, { status: 400 })
+    // Validate inputs with bounded lengths
+    const firstName = validateString(body.first_name, 'First name', { required: true, maxLength: 200 })
+    if (firstName.error) {
+      return NextResponse.json({ error: firstName.error.message }, { status: 400 })
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    let supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-    if (!supabaseKey || supabaseKey === 'your_supabase_service_role_key') {
-      supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const lastName = validateString(body.last_name, 'Last name', { maxLength: 200 })
+    if (lastName.error) {
+      return NextResponse.json({ error: lastName.error.message }, { status: 400 })
     }
 
-    if (supabaseUrl && supabaseKey && supabaseUrl !== 'your_supabase_project_url') {
-      const { createClient } = await import('@supabase/supabase-js')
-      const supabase = createClient(supabaseUrl, supabaseKey)
-      const { error } = await supabase.from('contact_submissions').insert({
-        first_name,
-        last_name: last_name || null,
-        phone: phone || null,
-        email: email || null,
-        message: message || null,
-        is_read: false,
-      })
-      if (error) {
-        console.error('Supabase error:', error)
-        return NextResponse.json({ error: 'Failed to save message' }, { status: 500 })
-      }
+    const phone = validatePhone(body.phone)
+    if (phone.error) {
+      return NextResponse.json({ error: phone.error.message }, { status: 400 })
+    }
+
+    const email = validateEmail(body.email)
+    if (email.error) {
+      return NextResponse.json({ error: email.error.message }, { status: 400 })
+    }
+
+    const message = validateString(body.message, 'Message', { maxLength: 5000 })
+    if (message.error) {
+      return NextResponse.json({ error: message.error.message }, { status: 400 })
+    }
+
+    // Use admin client for server-side insert
+    const supabase = createAdminClient()
+    const { error } = await supabase.from('contact_submissions').insert({
+      first_name: firstName.value,
+      last_name: lastName.value,
+      phone: phone.value,
+      email: email.value,
+      message: message.value,
+      is_read: false,
+    })
+
+    if (error) {
+      console.error('Supabase error:', error)
+      return NextResponse.json({ error: 'Failed to save message' }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, message: 'Message sent successfully' })

@@ -39,6 +39,34 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.push('/admin/login')
   }
 
+  // Auto logout on inactivity (15 minutes of no interaction)
+  useEffect(() => {
+    if (!user || isLoginPage) return
+
+    const INACTIVITY_TIMEOUT = 15 * 60 * 1000 // 15 minutes
+    let timeoutId: NodeJS.Timeout
+
+    const handleInactivityLogout = async () => {
+      await signOut()
+      router.push('/admin/login')
+    }
+
+    const resetTimer = () => {
+      if (timeoutId) clearTimeout(timeoutId)
+      timeoutId = setTimeout(handleInactivityLogout, INACTIVITY_TIMEOUT)
+    }
+
+    const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll']
+    events.forEach(event => window.addEventListener(event, resetTimer))
+
+    resetTimer()
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+      events.forEach(event => window.removeEventListener(event, resetTimer))
+    }
+  }, [user, isLoginPage, signOut, router])
+
   if (isLoginPage) return <>{children}</>
   if (loading || !user) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a2e' }}>
