@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
@@ -6,6 +7,47 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 export const revalidate = 0;
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const supabase = await createServerSupabaseClient()
+  const { data: post } = await supabase
+    .from('blog_posts')
+    .select('title, excerpt, featured_image')
+    .eq('slug', slug)
+    .single()
+
+  if (!post) {
+    return { title: 'Blog Post - Fonet Stationary Center' }
+  }
+
+  const title = `${post.title} - Fonet Stationary Center`
+  const description = post.excerpt || ''
+  const imageUrl = post.featured_image || '/images/fonet logo.PNG'
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      url: `https://fonet.com.np/blog/${slug}`,
+      images: [
+        {
+          url: imageUrl.startsWith('/') ? `https://fonet.com.np${imageUrl}` : imageUrl,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl.startsWith('/') ? `https://fonet.com.np${imageUrl}` : imageUrl],
+    },
+  }
+}
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -22,8 +64,38 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound()
   }
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt || "",
+    "image": post.featured_image ? (post.featured_image.startsWith('/') ? `https://fonet.com.np${post.featured_image}` : post.featured_image) : "https://fonet.com.np/images/fonet logo.PNG",
+    "datePublished": post.created_at,
+    "dateModified": post.updated_at || post.created_at,
+    "author": {
+      "@type": "Person",
+      "name": post.author || "Admin"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Fonet Stationary Center",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://fonet.com.np/images/fonet logo.PNG"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://fonet.com.np/blog/${slug}`
+    }
+  }
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <Header />
       <div className="inner-banner">
         <div className="container">

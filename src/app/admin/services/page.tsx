@@ -8,7 +8,11 @@ export default function AdminServices() {
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Service | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ title: '', slug: '', description: '', icon: 'fa fa-print', sort_order: 0 })
+  const [form, setForm] = useState({
+    title: '', slug: '', description: '', long_description: '', icon: 'fa fa-print',
+    image_url: '', features: '', sort_order: 0,
+  })
+  const [uploading, setUploading] = useState(false)
 
   const supabase = createClient()
 
@@ -21,22 +25,63 @@ export default function AdminServices() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchServices() }, [])
 
+  const handleImageUpload = async (file: File) => {
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('folder', 'services')
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (data.publicUrl) {
+        setForm(prev => ({ ...prev, image_url: data.publicUrl }))
+      } else {
+        alert(data.error || 'Upload failed')
+      }
+    } catch {
+      alert('Upload failed')
+    }
+    setUploading(false)
+  }
+
   const handleSave = async () => {
     const slug = form.slug || form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+    const featuresArray = form.features
+      ? form.features.split('\n').map(f => f.trim()).filter(Boolean)
+      : null
+    const payload = {
+      title: form.title,
+      slug,
+      description: form.description || null,
+      long_description: form.long_description || null,
+      icon: form.icon,
+      image_url: form.image_url || null,
+      features: featuresArray,
+      sort_order: form.sort_order,
+    }
     if (editing) {
-      await supabase.from('services').update({ ...form, slug }).eq('id', editing.id)
+      await supabase.from('services').update(payload).eq('id', editing.id)
     } else {
-      await supabase.from('services').insert({ ...form, slug })
+      await supabase.from('services').insert(payload)
     }
     setShowForm(false)
     setEditing(null)
-    setForm({ title: '', slug: '', description: '', icon: 'fa fa-print', sort_order: 0 })
+    setForm({ title: '', slug: '', description: '', long_description: '', icon: 'fa fa-print', image_url: '', features: '', sort_order: 0 })
     fetchServices()
   }
 
   const handleEdit = (s: Service) => {
     setEditing(s)
-    setForm({ title: s.title, slug: s.slug, description: s.description || '', icon: s.icon, sort_order: s.sort_order })
+    setForm({
+      title: s.title,
+      slug: s.slug,
+      description: s.description || '',
+      long_description: s.long_description || '',
+      icon: s.icon,
+      image_url: s.image_url || '',
+      features: (s.features || []).join('\n'),
+      sort_order: s.sort_order,
+    })
     setShowForm(true)
   }
 
@@ -58,7 +103,7 @@ export default function AdminServices() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <p style={{ color: '#888', margin: 0 }}>{services.length} services total</p>
-        <button onClick={() => { setEditing(null); setForm({ title: '', slug: '', description: '', icon: 'fa fa-print', sort_order: services.length + 1 }); setShowForm(true) }}
+        <button onClick={() => { setEditing(null); setForm({ title: '', slug: '', description: '', long_description: '', icon: 'fa fa-print', image_url: '', features: '', sort_order: services.length + 1 }); setShowForm(true) }}
           style={{ padding: '10px 20px', background: '#3347B0', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>
           <i className="fa fa-plus" style={{ marginRight: 8 }}></i>Add Service
         </button>
@@ -70,15 +115,47 @@ export default function AdminServices() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
             <input placeholder="Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })}
               style={{ padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14 }} />
+            <input placeholder="Slug (auto-generated)" value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })}
+              style={{ padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14 }} />
             <input placeholder="Icon Class (e.g., fa fa-print)" value={form.icon} onChange={e => setForm({ ...form, icon: e.target.value })}
               style={{ padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14 }} />
-            <textarea placeholder="Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
-              style={{ padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, gridColumn: 'span 2', height: 80 }} />
             <input type="number" placeholder="Sort Order" value={form.sort_order} onChange={e => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })}
               style={{ padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14 }} />
+            <textarea placeholder="Short Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
+              style={{ padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, gridColumn: 'span 2', height: 80 }} />
+            <textarea placeholder="Full/Long Description" value={form.long_description} onChange={e => setForm({ ...form, long_description: e.target.value })}
+              style={{ padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, gridColumn: 'span 2', height: 100 }} />
+            <textarea placeholder="Features (one per line)" value={form.features} onChange={e => setForm({ ...form, features: e.target.value })}
+              style={{ padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, gridColumn: 'span 2', height: 100 }} />
+
+            {/* Image Upload */}
+            <div style={{ gridColumn: 'span 2', display: 'flex', gap: 15, alignItems: 'flex-start' }}>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', fontSize: 12, color: '#666', fontWeight: 600, marginBottom: 6 }}>Service Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {
+                    const f = e.target.files?.[0]
+                    if (f) handleImageUpload(f)
+                  }}
+                  style={{ padding: 8, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 13, background: '#fafafa', width: '100%' }}
+                />
+                <div style={{ marginTop: 8 }}>
+                  <input placeholder="Or enter image URL" value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })}
+                    style={{ padding: 10, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 13, width: '100%', boxSizing: 'border-box' }} />
+                </div>
+                {uploading && <p style={{ color: '#3347B0', fontSize: 13, marginTop: 6 }}>Uploading...</p>}
+              </div>
+              {form.image_url && (
+                <div style={{ width: 150, height: 100, borderRadius: 8, overflow: 'hidden', border: '1px solid #e0e0e0', flexShrink: 0 }}>
+                  <img src={form.image_url} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+              )}
+            </div>
           </div>
           <div style={{ display: 'flex', gap: 10, marginTop: 15 }}>
-            <button onClick={handleSave} style={{ padding: '10px 25px', background: '#3347B0', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer' }}>Save</button>
+            <button onClick={handleSave} disabled={uploading} style={{ padding: '10px 25px', background: '#3347B0', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer' }}>Save</button>
             <button onClick={() => { setShowForm(false); setEditing(null) }} style={{ padding: '10px 25px', background: '#e0e0e0', border: 'none', borderRadius: 8, cursor: 'pointer' }}>Cancel</button>
           </div>
         </div>
@@ -89,6 +166,7 @@ export default function AdminServices() {
           <thead>
             <tr style={{ background: '#f8f9fa', borderBottom: '2px solid #e0e0e0' }}>
               <th style={{ padding: '12px 15px', textAlign: 'left', fontSize: 13, color: '#666' }}>#</th>
+              <th style={{ padding: '12px 15px', textAlign: 'left', fontSize: 13, color: '#666' }}>Image</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', fontSize: 13, color: '#666' }}>Icon</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', fontSize: 13, color: '#666' }}>Title</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', fontSize: 13, color: '#666' }}>Description</th>
@@ -100,9 +178,16 @@ export default function AdminServices() {
             {services.map((s, idx) => (
               <tr key={s.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
                 <td style={{ padding: '12px 15px', fontSize: 14, color: '#888' }}>{idx + 1}</td>
+                <td style={{ padding: '12px 15px' }}>
+                  {s.image_url ? (
+                    <img src={s.image_url} alt={s.title} style={{ width: 50, height: 35, objectFit: 'cover', borderRadius: 4 }} />
+                  ) : (
+                    <span style={{ color: '#ccc', fontSize: 12 }}>No image</span>
+                  )}
+                </td>
                 <td style={{ padding: '12px 15px' }}><i className={s.icon} style={{ fontSize: 20, color: '#3347B0' }}></i></td>
                 <td style={{ padding: '12px 15px', fontSize: 14, fontWeight: 600 }}>{s.title}</td>
-                <td style={{ padding: '12px 15px', fontSize: 13, color: '#666', maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.description}</td>
+                <td style={{ padding: '12px 15px', fontSize: 13, color: '#666', maxWidth: 250, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.description}</td>
                 <td style={{ padding: '12px 15px' }}>
                   <button onClick={() => handleToggle(s.id, s.is_active)} style={{
                     padding: '4px 12px', borderRadius: 20, border: 'none', fontSize: 12, cursor: 'pointer',

@@ -31,7 +31,7 @@ export default function ContactInfoSection() {
               <div className="info-title">CONTACT US</div>
               <div className="info-box">
                 <i className="fa fa-phone" aria-hidden="true"></i>
-                056-526307 | 9845220077
+                056-526307 | 9845220077 | 9765028501 | 9765028500
               </div>
               <div className="clearfix"></div>
             </div>

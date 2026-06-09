@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
@@ -5,6 +6,11 @@ import Link from 'next/link'
 import { getVideoEmbedInfo } from '@/lib/media-helper'
 
 export const revalidate = 0; // Disable static caching so videos are always dynamic
+
+export const metadata: Metadata = {
+  title: "Service Videos & Tutorials - Fonet Stationary Center",
+  description: "Watch video guides and tutorials of printing processes, binding, certified translation, and notary requests. See our equipment in action at Fonet Chitwan.",
+}
 
 // Helper to determine the source provider name for badge display
 const getVideoSourceLabel = (url: string): { name: string; color: string; icon: string } => {

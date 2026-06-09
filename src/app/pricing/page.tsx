@@ -1,9 +1,15 @@
+import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
 export const revalidate = 0; // Disable static caching so prices are always live
+
+export const metadata: Metadata = {
+  title: "Our Price List - Fonet Stationary Center",
+  description: "Browse affordable pricing rates for photocopy, black & white and color laser printing, custom self stamps, PVC ID cards, visiting cards, lamination, and thesis typing at Fonet Chitwan.",
+}
 
 interface PricingItem {
   id: string

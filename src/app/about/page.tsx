@@ -1,5 +1,11 @@
+import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+
+export const metadata: Metadata = {
+  title: "About Us - Fonet Stationary Center",
+  description: "Learn about the history, mission, and vision of Fonet Stationary Center (FCI) in Bharatpur, Chitwan. Serving the community with premium print, copy, and notary services since 2070 B.S.",
+}
 
 export default function AboutPage() {
   return (
