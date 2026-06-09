@@ -52,8 +52,8 @@ export default function Header() {
         requestAnimationFrame(() => {
           const y = window.scrollY
           setScrolled((prev) => {
-            if (!prev && y > 60) return true
-            if (prev && y < 30) return false
+            if (!prev && y > 150) return true
+            if (prev && y < 50) return false
             return prev
           })
           ticking = false
@@ -79,7 +79,7 @@ export default function Header() {
     
     const adString = today.toISOString().split('T')[0]
     setAdInput(adString)
-    setBsOutput(nepDate.format('YYYY MMMM DD, dddd'))
+    setBsOutput(nepDate.format('YYYY MMMM DD, ddd'))
     
     try {
       const adVal = nepDate.toJsDate()
@@ -137,7 +137,7 @@ export default function Header() {
         supabase.from('blog_posts').select('id, title, slug, excerpt').eq('is_published', true).or(`title.ilike.${pattern},excerpt.ilike.${pattern}`).limit(5),
         supabase.from('services').select('id, title, slug, description').eq('is_active', true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(5),
         supabase.from('notices_downloads').select('id, title, type').eq('is_active', true).ilike('title', pattern).limit(5),
-        supabase.from('notes').select('id, title, subject, class_level').eq('is_active', true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(5),
+        supabase.from('notes').select('id, title, subject, class_level, description, content').eq('is_active', true).or(`title.ilike.${pattern},description.ilike.${pattern},content.ilike.${pattern}`).limit(5),
       ])
       setSearchResults({
         blogs: blogsRes.data || [],
@@ -191,12 +191,14 @@ export default function Header() {
   }
 
   return (
-    <header className={`site-header-custom ${scrolled ? 'scrolled' : ''}`} id="header">
-      {/* Top Red Strip */}
-      <div className="top-red-strip"></div>
+    <>
+      {/* Header Top Row (Logo, Date Converter, clock, socials, mobile hamburger) */}
+      <header className={`header-top-row-wrapper ${scrolled ? 'scrolled' : ''}`} id="header">
+        {/* Top Red Strip */}
+        <div className="top-red-strip"></div>
 
-      {/* Header Top Row: Logo & Info */}
-      <div className="header-top-row">
+        {/* Header Top Row: Logo & Info */}
+        <div className="header-top-row">
         <div className="container">
           <div className="header-top-inner">
             {/* Branding (Logo + Name) */}
@@ -253,7 +255,7 @@ export default function Header() {
                               try {
                                 const d = new Date(e.target.value)
                                 const nep = new NepaliDate(d)
-                                setBsOutput(nep.format('YYYY MMMM DD, dddd'))
+                                setBsOutput(nep.format('YYYY MMMM DD, ddd'))
                               } catch (err) {
                                 setBsOutput('Invalid Date')
                               }
@@ -359,13 +361,15 @@ export default function Header() {
               <span></span>
               <span></span>
             </div>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Header Navigation Row (Capsule Menu) */}
-      <div className="header-nav-row">
-        <div className="container">
+      <div className={`header-nav-row-wrapper ${scrolled ? 'scrolled' : ''}`}>
+        <div className="header-nav-row">
+          <div className="container">
           <div className="nav-container-pill">
             <nav className="navigation-custom">
               <ul className="mainmenu-custom">
@@ -442,7 +446,7 @@ export default function Header() {
               <input
                 ref={searchInputRef}
                 type="text"
-                placeholder="Search blogs, services, notices..."
+                placeholder="Search services, notes, blogs, notices..."
                 value={searchQuery}
                 onChange={e => onSearchInput(e.target.value)}
                 className="search-input"
@@ -488,9 +492,10 @@ export default function Header() {
                   <div className="search-results-group">
                     <h5 className="search-group-title"><i className="fa fa-book"></i> Academic Notes</h5>
                     {searchResults.notes.map((n: any) => (
-                      <Link key={n.id} href="/notes" className="search-result-item" onClick={closeSearch}>
+                      <Link key={n.id} href={`/notes?search=${encodeURIComponent(searchQuery)}`} className="search-result-item" onClick={closeSearch}>
                         <strong>{n.title}</strong>
-                        {n.subject && <span style={{ fontSize: 12, color: '#666', marginTop: 4 }}>{n.subject} ({n.class_level || 'All Levels'})</span>}
+                        {n.subject && <span style={{ fontSize: 12, color: '#666', marginTop: 4, display: 'block' }}>{n.subject} ({n.class_level || 'All Levels'})</span>}
+                        {n.description && <span style={{ fontSize: 12, color: '#777', display: 'block', marginTop: 2 }}>{n.description.substring(0, 80)}...</span>}
                       </Link>
                     ))}
                   </div>
@@ -507,77 +512,79 @@ export default function Header() {
         </div>
       )}
 
-      {/* Mobile Menu Drawer Overlay */}
-      <div
-        className={`overlaybg-custom ${menuOpen ? 'active' : ''}`}
-        onClick={closeMenu}
-      ></div>
+    </div>
 
-      {/* Mobile Drawer Menu Content */}
-      <div className={`menu-wrapper-custom ${menuOpen ? 'active' : ''}`}>
-        <div className="mobile-menu-header">
-          <img 
-            src="/images/fonet logo.PNG" 
-            alt="Fonet Stationary Center" 
-            className="mobile-menu-logo" 
-          />
-          <button className="mobile-menu-close" onClick={closeMenu}>&times;</button>
-        </div>
-        <ul className="mobile-mainmenu">
-          {navItems.map((item) => {
-            const hasDropdown = !!item.dropdownItems
-            const active = hasDropdown 
-              ? isDropdownActive(item.dropdownItems) 
-              : isActive(item.href)
+    {/* Mobile Menu Drawer Overlay */}
+    <div
+      className={`overlaybg-custom ${menuOpen ? 'active' : ''}`}
+      onClick={closeMenu}
+    ></div>
 
-            if (item.dropdownItems) {
-              return (
-                <li key={item.label} className={`mobile-menu-item-has-children ${active ? 'active' : ''}`}>
-                  <a href="#" onClick={toggleMobileDropdown} className="mobile-dropdown-toggle">
-                    {item.label} 
-                    <i className={`fa ${mobileDropdownOpen ? 'fa-caret-up' : 'fa-caret-down'}`} aria-hidden="true"></i>
-                  </a>
-                  <ul className={`mobile-dropdown-submenu ${mobileDropdownOpen ? 'open' : ''}`}>
-                    {item.dropdownItems.map((subItem) => (
-                      <li key={subItem.href} className={pathname === subItem.href ? 'active' : ''}>
-                        <Link href={subItem.href} onClick={closeMenu}>
-                          {subItem.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              )
-            }
+    {/* Mobile Drawer Menu Content */}
+    <div className={`menu-wrapper-custom ${menuOpen ? 'active' : ''}`}>
+      <div className="mobile-menu-header">
+        <img 
+          src="/images/fonet logo.PNG" 
+          alt="Fonet Stationary Center" 
+          className="mobile-menu-logo" 
+        />
+        <button className="mobile-menu-close" onClick={closeMenu}>&times;</button>
+      </div>
+      <ul className="mobile-mainmenu">
+        {navItems.map((item) => {
+          const hasDropdown = !!item.dropdownItems
+          const active = hasDropdown 
+            ? isDropdownActive(item.dropdownItems) 
+            : isActive(item.href)
 
+          if (item.dropdownItems) {
             return (
-              <li key={item.href} className={active ? 'active' : ''}>
-                <Link href={item.href} onClick={closeMenu}>
-                  {item.label}
-                </Link>
+              <li key={item.label} className={`mobile-menu-item-has-children ${active ? 'active' : ''}`}>
+                <a href="#" onClick={toggleMobileDropdown} className="mobile-dropdown-toggle">
+                  {item.label} 
+                  <i className={`fa ${mobileDropdownOpen ? 'fa-caret-up' : 'fa-caret-down'}`} aria-hidden="true"></i>
+                </a>
+                <ul className={`mobile-dropdown-submenu ${mobileDropdownOpen ? 'open' : ''}`}>
+                  {item.dropdownItems.map((subItem) => (
+                    <li key={subItem.href} className={pathname === subItem.href ? 'active' : ''}>
+                      <Link href={subItem.href} onClick={closeMenu}>
+                        {subItem.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </li>
             )
-          })}
-        </ul>
-        <div className="mobile-menu-footer">
-          <div className="mobile-info-item">
-            <i className="fa fa-clock-o" aria-hidden="true"></i>
-            <span>{businessHours}</span>
-          </div>
-          <div className="mobile-socials">
-            <a
-              href={facebookHref}
-              className="header-social-icon"
-              aria-label="Fonet Stationary Center on Facebook"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fa fa-facebook" aria-hidden="true"></i>
-            </a>
+          }
 
-          </div>
+          return (
+            <li key={item.href} className={active ? 'active' : ''}>
+              <Link href={item.href} onClick={closeMenu}>
+                {item.label}
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
+      <div className="mobile-menu-footer">
+        <div className="mobile-info-item">
+          <i className="fa fa-clock-o" aria-hidden="true"></i>
+          <span>{businessHours}</span>
+        </div>
+        <div className="mobile-socials">
+          <a
+            href={facebookHref}
+            className="header-social-icon"
+            aria-label="Fonet Stationary Center on Facebook"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i className="fa fa-facebook" aria-hidden="true"></i>
+          </a>
+
         </div>
       </div>
-    </header>
-  )
+    </div>
+  </>
+)
 }

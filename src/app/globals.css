@@ -5,8 +5,8 @@
 
 /* ---- CSS Reset & Base ---- */
 *, *:before, *:after { box-sizing: border-box; }
-html { font-family: sans-serif; -webkit-text-size-adjust: 100%; }
-body { margin: 0; color: #444; font-size: 16px; line-height: 1.2; font-weight: 400; background: #ffffff; font-family: 'Roboto', sans-serif; }
+html { font-family: sans-serif; -webkit-text-size-adjust: 100%; overflow-x: clip; width: 100%; }
+body { margin: 0; color: #444; font-size: 16px; line-height: 1.2; font-weight: 400; background: #ffffff; font-family: 'Roboto', sans-serif; overflow-x: clip; width: 100%; }
 a { text-decoration: none; color: #3347B0; transition: all 0.3s ease; word-break: break-word; outline: 0; }
 a:hover, a:active, a:focus { outline: 0; text-decoration: none; }
 img { border: 0; height: auto; max-width: 100%; vertical-align: middle; }
@@ -1133,31 +1133,39 @@ ul { list-style: disc; }
   width: 100%;
 }
 
-/* Site header wrapper */
-/* Sticky Header and Compact layout when scrolled */
-.site-header-custom {
+/* Site header wrappers */
+.header-top-row-wrapper {
+  position: relative;
+  width: 100%;
+  background: #ffffff;
+  z-index: 999;
+}
+
+.header-nav-row-wrapper {
   position: sticky;
   top: 0;
   width: 100%;
   z-index: 1000;
   background: #ffffff;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+  border-bottom: 1px solid #ededed;
 }
 
 /* Smooth transitions to prevent flickering on scroll */
-.site-header-custom,
-.site-header-custom .header-top-row,
-.site-header-custom .site-logo,
-.site-header-custom .brand-name,
-.site-header-custom .header-nav-row,
-.site-header-custom .nav-container-pill,
-.site-header-custom .mainmenu-custom li,
-.site-header-custom .mainmenu-custom li a,
-.site-header-custom .header-date-converter-direct,
-.site-header-custom .converter-label-inline,
-.site-header-custom .inline-input-field,
-.site-header-custom .inline-select-field,
-.site-header-custom .inline-result-badge {
+.header-top-row-wrapper,
+.header-nav-row-wrapper,
+.header-top-row,
+.site-logo,
+.brand-name,
+.header-nav-row,
+.nav-container-pill,
+.mainmenu-custom li,
+.mainmenu-custom li a,
+.header-date-converter-direct,
+.converter-label-inline,
+.inline-input-field,
+.inline-select-field,
+.inline-result-badge {
   transition: padding 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
               height 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
               font-size 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
@@ -1167,34 +1175,50 @@ ul { list-style: disc; }
   transform: translateZ(0);
 }
 
-.site-header-custom.scrolled {
+.header-nav-row-wrapper.scrolled {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-bottom: none;
 }
 
-.site-header-custom.scrolled .header-top-row {
+.header-nav-row-wrapper.scrolled .header-nav-row {
   padding: 6px 0;
 }
 
-.site-header-custom.scrolled .site-logo {
-  height: 52px;
-}
-
-.site-header-custom.scrolled .brand-name {
-  font-size: 22px;
-}
-
-.site-header-custom.scrolled .header-nav-row {
-  padding: 6px 0;
-}
-
-.site-header-custom.scrolled .nav-container-pill {
+.header-nav-row-wrapper.scrolled .nav-container-pill {
   height: 48px;
 }
 
-.site-header-custom.scrolled .mainmenu-custom li,
-.site-header-custom.scrolled .mainmenu-custom li a {
+.header-nav-row-wrapper.scrolled .mainmenu-custom li,
+.header-nav-row-wrapper.scrolled .mainmenu-custom li a {
   height: 48px;
   font-size: 13.5px;
+}
+
+/* Mobile responsive sticky top row */
+@media (max-width: 991px) {
+  .header-top-row-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #ededed;
+  }
+  
+  .header-top-row-wrapper.scrolled .header-top-row {
+    padding: 6px 0;
+  }
+  
+  .header-top-row-wrapper.scrolled .site-logo {
+    height: 48px;
+  }
+  
+  .header-top-row-wrapper.scrolled .brand-name {
+    font-size: 18px;
+  }
+  
+  .header-nav-row-wrapper {
+    display: none !important;
+  }
 }
 
 /* Header Date Converter Widget - Direct Inline */
@@ -1721,13 +1745,22 @@ ul { list-style: disc; }
   background-color: #ffffff;
   z-index: 2000;
   box-shadow: -8px 0 30px rgba(0,0,0,0.15);
-  display: none; /* Hidden by default on desktop to prevent horizontal scrolling */
+  display: flex;
   flex-direction: column;
-  transition: right 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+  transition: right 0.3s cubic-bezier(0.77, 0.2, 0.05, 1), visibility 0.3s;
+  visibility: hidden;
 }
 
 .menu-wrapper-custom.active {
   right: 0;
+  visibility: visible;
+}
+
+/* Force hide drawer/overlay on desktop viewports */
+@media (min-width: 992px) {
+  .menu-wrapper-custom, .overlaybg-custom {
+    display: none !important;
+  }
 }
 
 .mobile-menu-header {

@@ -7,68 +7,13 @@ import type { StudyNote } from '@/lib/types'
 
 type NoteItem = Pick<StudyNote, 'id' | 'title' | 'subject' | 'class_level' | 'file_url' | 'description' | 'content' | 'created_at'>
 
-const defaultNotes: NoteItem[] = [
-  {
-    id: 'note1',
-    title: 'SEE Computer Science Short Q&A & Definitions',
-    subject: 'Computer Science',
-    class_level: 'Class 10 (SEE)',
-    file_url: '/notes/SEE_Computer_Science_Notes.pdf',
-    description: 'Comprehensive short answer questions, technical terms, database queries, and programming tips for SEE Computer Science exams.',
-    content: null,
-    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 'note2',
-    title: 'Grade 11 English Solutions - Comprehensive Grammar Guide',
-    subject: 'English',
-    class_level: 'Class 11',
-    file_url: '/notes/Grade11_English_Grammar_Guide.pdf',
-    description: 'Detailed explanations of English grammar chapters, syntax rules, letter writing formats, and literature summaries.',
-    content: null,
-    created_at: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 'note3',
-    title: 'Grade 12 Business Studies - Principles of Management Notes',
-    subject: 'Business Studies',
-    class_level: 'Class 12',
-    file_url: '/notes/Grade12_Business_Studies_Chapter1.pdf',
-    description: 'Important concepts on Planning, Organizing, Staffing, Directing, and Controlling for HSEB Grade 12 students.',
-    content: null,
-    created_at: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 'note4',
-    title: 'BBS 1st Year Business Mathematics Lecture Notes',
-    subject: 'Mathematics',
-    class_level: 'Bachelor',
-    file_url: '/notes/BBS_1st_Year_Business_Math.pdf',
-    description: 'Detailed lectures and practice questions covering Matrices, Determinants, Calculus, and Coordinate Geometry.',
-    content: null,
-    created_at: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: 'note5',
-    title: 'MBA 2nd Semester Strategic Management Cases & Guides',
-    subject: 'Business Studies',
-    class_level: 'Master',
-    file_url: '/notes/MBA_Strategic_Management.pdf',
-    description: 'Case study guides, SWOT analyses templates, BCG matrix examples, and Porter Five Forces notes for MBA students.',
-    content: null,
-    created_at: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString()
-  }
-]
-
-const defaultSubjects = ['Computer Science', 'English', 'Mathematics', 'Nepali', 'Science', 'Business Studies', 'Accountancy', 'Social Studies']
-const defaultClassLevels = ['Class 10 (SEE)', 'Class 11', 'Class 12', 'Bachelor', 'Master']
 const allowedRichTextTags = new Set(['p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'strike', 'h2', 'h3', 'h4', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'a', 'img'])
 
-const buildFilterOptions = (defaults: string[], values: Array<string | null | undefined>) => {
+const buildFilterOptions = (values: Array<string | null | undefined>) => {
   const seen = new Set<string>()
   const options = ['All']
 
-  defaults.concat(values.map(value => value || '')).forEach((value) => {
+  values.map(value => value || '').forEach((value) => {
     const trimmed = value.trim()
     const key = trimmed.toLowerCase()
     if (trimmed && !seen.has(key)) {
@@ -177,26 +122,34 @@ export default function NotesClient() {
   const [selectedLevel, setSelectedLevel] = useState('All')
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const q = params.get('search') || params.get('q') || ''
+      if (q) {
+        setSearchQuery(q)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     async function fetchNotes() {
       try {
         const supabase = createClient()
         const { data, error } = await supabase
           .from('notes')
-          .select('*')
+          .select('id, title, subject, class_level, file_url, description, content, created_at')
           .eq('is_active', true)
           .order('sort_order', { ascending: true })
           .order('created_at', { ascending: false })
 
         if (error) throw error
 
-        if (data && data.length > 0) {
+        if (data) {
           setItems(data)
-        } else {
-          setItems(defaultNotes)
         }
       } catch (err) {
         console.error('Error fetching academic notes', err)
-        setItems(defaultNotes)
+        setItems([])
       } finally {
         setLoading(false)
       }
@@ -205,11 +158,11 @@ export default function NotesClient() {
   }, [])
 
   const subjects = useMemo(
-    () => buildFilterOptions(defaultSubjects, items.map(note => note.subject)),
+    () => buildFilterOptions(items.map(note => note.subject)),
     [items]
   )
   const classLevels = useMemo(
-    () => buildFilterOptions(defaultClassLevels, items.map(note => note.class_level)),
+    () => buildFilterOptions(items.map(note => note.class_level)),
     [items]
   )
 

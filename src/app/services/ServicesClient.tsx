@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 
@@ -13,6 +13,16 @@ interface ServiceItem {
 
 export default function ServicesClient({ services }: { services: ServiceItem[] }) {
   const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const q = params.get('search') || params.get('q') || ''
+      if (q) {
+        setSearchQuery(q)
+      }
+    }
+  }, [])
 
   const filtered = services.filter(s => 
     s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

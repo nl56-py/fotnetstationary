@@ -283,6 +283,43 @@ export default async function ServiceDetailPage({ params }: PageProps) {
             {/* Sidebar */}
             <div className="col-md-4 col-sm-12">
               <div className="sdc-sidebar">
+                {/* Search Services Widget */}
+                <div className="sdc-sidebar-widget search-widget" style={{ marginBottom: 25 }}>
+                  <h4 className="sdc-widget-title">
+                    <i className="fa fa-search"></i> Search Services
+                  </h4>
+                  <form action="/services" method="GET" style={{ position: 'relative' }}>
+                    <input
+                      type="text"
+                      name="search"
+                      placeholder="Search services..."
+                      style={{
+                        width: '100%',
+                        padding: '10px 35px 10px 12px',
+                        borderRadius: 6,
+                        border: '1px solid #ddd',
+                        fontSize: 14,
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      style={{
+                        position: 'absolute',
+                        right: 10,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: 'none',
+                        border: 'none',
+                        color: '#666',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <i className="fa fa-search"></i>
+                    </button>
+                  </form>
+                </div>
+
                 {/* All Services List */}
                 <div className="sdc-sidebar-widget">
                   <h4 className="sdc-widget-title">
