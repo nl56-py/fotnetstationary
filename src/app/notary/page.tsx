@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import { createClient } from '@/lib/supabase/client'
 
 // Notary Services structural definitions (excluding rates/prices)
 const serviceCategories = [
@@ -149,28 +148,25 @@ export default function NotaryPage() {
     setSubmitStatus({ type: null, msg: '' })
 
     try {
-      const supabase = createClient()
       let uploadedFileUrl = ''
 
-      // 1. Upload File if selected
+      // 1. Upload File via server-side API route (validates type/size server-side)
       if (file) {
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
-        const filePath = `notary/${fileName}`
+        const formData = new FormData()
+        formData.append('file', file)
 
-        const { error: uploadError } = await supabase.storage
-          .from('documents')
-          .upload(filePath, file)
+        const uploadRes = await fetch('/api/notary/upload', {
+          method: 'POST',
+          body: formData,
+        })
 
-        if (uploadError) {
-          throw new Error(`File upload failed: ${uploadError.message}`)
+        const uploadResult = await uploadRes.json()
+
+        if (!uploadRes.ok) {
+          throw new Error(uploadResult.error || 'File upload failed')
         }
 
-        const { data: urlData } = supabase.storage
-          .from('documents')
-          .getPublicUrl(filePath)
-
-        uploadedFileUrl = urlData.publicUrl
+        uploadedFileUrl = uploadResult.publicUrl
       }
 
       // 2. Save Notary Request

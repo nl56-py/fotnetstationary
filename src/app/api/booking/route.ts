@@ -1,36 +1,51 @@
 import { NextResponse } from 'next/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { validateString, validateEmail, validatePhone } from '@/lib/validation'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { customer_name, customer_email, customer_phone, service_type, message } = body
 
-    if (!customer_name || !customer_phone) {
-      return NextResponse.json({ error: 'Name and phone are required' }, { status: 400 })
+    // Validate inputs with bounded lengths
+    const customerName = validateString(body.customer_name, 'Name', { required: true, maxLength: 200 })
+    if (customerName.error) {
+      return NextResponse.json({ error: customerName.error.message }, { status: 400 })
     }
 
-    // If Supabase is configured, insert into database
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    let supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-    if (!supabaseKey || supabaseKey === 'your_supabase_service_role_key') {
-      supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const customerPhone = validatePhone(body.customer_phone, { required: true })
+    if (customerPhone.error) {
+      return NextResponse.json({ error: customerPhone.error.message }, { status: 400 })
     }
 
-    if (supabaseUrl && supabaseKey && supabaseUrl !== 'your_supabase_project_url') {
-      const { createClient } = await import('@supabase/supabase-js')
-      const supabase = createClient(supabaseUrl, supabaseKey)
-      const { error } = await supabase.from('bookings').insert({
-        customer_name,
-        customer_email: customer_email || null,
-        customer_phone,
-        service_type: service_type || null,
-        message: message || null,
-        status: 'pending',
-      })
-      if (error) {
-        console.error('Supabase error:', error)
-        return NextResponse.json({ error: 'Failed to save booking' }, { status: 500 })
-      }
+    const customerEmail = validateEmail(body.customer_email)
+    if (customerEmail.error) {
+      return NextResponse.json({ error: customerEmail.error.message }, { status: 400 })
+    }
+
+    const serviceType = validateString(body.service_type, 'Service type', { maxLength: 200 })
+    if (serviceType.error) {
+      return NextResponse.json({ error: serviceType.error.message }, { status: 400 })
+    }
+
+    const message = validateString(body.message, 'Message', { maxLength: 5000 })
+    if (message.error) {
+      return NextResponse.json({ error: message.error.message }, { status: 400 })
+    }
+
+    // Use admin client for server-side insert
+    const supabase = createAdminClient()
+    const { error } = await supabase.from('bookings').insert({
+      customer_name: customerName.value,
+      customer_email: customerEmail.value,
+      customer_phone: customerPhone.value,
+      service_type: serviceType.value,
+      message: message.value,
+      status: 'pending',
+    })
+
+    if (error) {
+      console.error('Supabase error:', error)
+      return NextResponse.json({ error: 'Failed to save booking' }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, message: 'Booking submitted successfully' })

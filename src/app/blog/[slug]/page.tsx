@@ -1,6 +1,7 @@
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { sanitizeHtml } from '@/lib/sanitize-html'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -57,10 +58,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                 <h2 style={{ marginBottom: 20 }}>{post.title}</h2>
                 
-                {/* Render Rich Text Content */}
+                {/* Render Rich Text Content — sanitized for XSS safety */}
                 <div 
                   className="blog-content prose" 
-                  dangerouslySetInnerHTML={{ __html: post.content || '' }} 
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} 
                 />
               </div>
             </div>
