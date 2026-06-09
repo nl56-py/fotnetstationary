@@ -1789,6 +1789,40 @@ ul { list-style: disc; }
   margin-top: -5px;
 }
 
+/* Mobile Drawer Search Bar */
+.mobile-drawer-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 15px 4px 15px;
+  padding: 11px 14px;
+  background: #f4f5f7;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobile-drawer-search:hover,
+.mobile-drawer-search:active {
+  background: #eaecf0;
+  border-color: #ccc;
+}
+
+.mobile-drawer-search-icon {
+  font-size: 15px;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.mobile-drawer-search-text {
+  font-size: 13.5px;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .mobile-mainmenu {
   list-style: none;
   padding: 15px 0;

@@ -530,6 +530,11 @@ export default function Header() {
         />
         <button className="mobile-menu-close" onClick={closeMenu}>&times;</button>
       </div>
+      {/* Mobile Search Bar */}
+      <div className="mobile-drawer-search" onClick={() => { closeMenu(); setTimeout(() => openSearch(), 200); }}>
+        <i className="fa fa-search mobile-drawer-search-icon"></i>
+        <span className="mobile-drawer-search-text">Search services, notes, blogs...</span>
+      </div>
       <ul className="mobile-mainmenu">
         {navItems.map((item) => {
           const hasDropdown = !!item.dropdownItems

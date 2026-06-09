@@ -20,10 +20,6 @@ const settingGroups = [
     title: 'Content',
     keys: ['about_text', 'history_text', 'mission_text', 'vision_text', 'copyright'],
   },
-  {
-    title: 'Announcement Popup Banner',
-    keys: ['banner_notice_active', 'banner_notice_text', 'banner_notice_image_url'],
-  },
 ]
 
 export default function AdminSettings() {
@@ -47,7 +43,7 @@ export default function AdminSettings() {
         const placeholders = missingKeys.map(k => ({
           id: Math.random().toString(),
           key: k,
-          value: k === 'banner_notice_active' ? 'false' : '',
+          value: '',
           updated_at: new Date().toISOString()
         }))
         dbSettings = [...dbSettings, ...placeholders]
@@ -92,7 +88,7 @@ export default function AdminSettings() {
         value: s.value,
         updated_at: new Date().toISOString()
       }
-      if (s.id && s.id.length > 15) {
+      if (s.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[45][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s.id)) {
         record.id = s.id
       }
       return record
