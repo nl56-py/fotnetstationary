@@ -78,7 +78,7 @@ export default function AdminSettings() {
       const { data } = supabase.storage.from('documents').getPublicUrl(fileName)
       updateSetting(key, data.publicUrl)
     } catch (err: any) {
-      alert('Image upload failed: ' + (err.message || 'Unknown error'))
+      alert('File upload failed: ' + (err.message || 'Unknown error'))
     } finally {
       setUploadingKey(null)
     }
@@ -135,21 +135,24 @@ export default function AdminSettings() {
               if (!setting) return null
               const isLong = ['about_text', 'history_text', 'mission_text', 'vision_text', 'banner_notice_text'].includes(key)
               const isHeroImage = key === 'hero_background_image_url'
+              const isNoticeMedia = key === 'banner_notice_image_url'
+              const isMediaUpload = isHeroImage || isNoticeMedia
+
               return (
-                <div key={key} style={{ gridColumn: isLong || isHeroImage ? 'span 2' : 'span 1' }}>
+                <div key={key} style={{ gridColumn: isLong || isMediaUpload ? 'span 2' : 'span 1' }}>
                   <label style={{ display: 'block', fontSize: 13, color: '#666', marginBottom: 6, fontWeight: 500 }}>
                     {formatLabel(key)}
                   </label>
-                  {isHeroImage ? (
+                  {isMediaUpload ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       <input value={setting.value || ''} onChange={e => updateSetting(key, e.target.value)}
-                        placeholder="/images/slider1.jpg or uploaded image URL"
+                        placeholder={isHeroImage ? "/images/slider1.jpg or uploaded image URL" : "Uploaded image or PDF URL"}
                         style={{ width: '100%', padding: 12, border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }} />
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: 15, alignItems: 'start' }}>
                         <div>
                           <input
                             type="file"
-                            accept="image/png,image/jpeg,image/webp,image/gif"
+                            accept={isHeroImage ? "image/png,image/jpeg,image/webp,image/gif" : "image/png,image/jpeg,image/webp,image/gif,application/pdf"}
                             onChange={e => {
                               const file = e.target.files?.[0]
                               if (file) handleImageUpload(key, file)
@@ -157,13 +160,23 @@ export default function AdminSettings() {
                             style={{ width: '100%', padding: 9, border: '1px dashed #d0d0d0', borderRadius: 8, background: '#fafafa', fontSize: 13, boxSizing: 'border-box' }}
                           />
                           <p style={{ margin: '8px 0 0 0', color: '#777', fontSize: 12, lineHeight: 1.5 }}>
-                            Recommended size: 1920 x 760 px. The site displays the full image without cropping, so wide landscape images look best.
+                            {isHeroImage 
+                              ? "Recommended size: 1920 x 760 px. The site displays the full image without cropping, so wide landscape images look best."
+                              : "Upload a notice banner image (PNG, JPG, WEBP) or a PDF document."
+                            }
                           </p>
-                          {uploadingKey === key && <p style={{ margin: '8px 0 0 0', color: '#3347B0', fontSize: 12 }}>Uploading image...</p>}
+                          {uploadingKey === key && <p style={{ margin: '8px 0 0 0', color: '#3347B0', fontSize: 12 }}>Uploading file...</p>}
                         </div>
                         {setting.value && (
-                          <div style={{ border: '1px solid #eee', borderRadius: 8, padding: 8, background: '#fafafa' }}>
-                            <img src={setting.value} alt="Hero preview" style={{ width: '100%', height: 90, objectFit: 'contain', background: '#0d1e52', borderRadius: 6 }} />
+                          <div style={{ border: '1px solid #eee', borderRadius: 8, padding: 8, background: '#fafafa', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 90 }}>
+                            {setting.value.toLowerCase().split('?')[0].endsWith('.pdf') ? (
+                              <a href={setting.value} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#c61a1a', gap: 4 }}>
+                                <i className="fa fa-file-pdf-o" style={{ fontSize: 36 }}></i>
+                                <span style={{ fontSize: 11, fontWeight: 600, textAlign: 'center', wordBreak: 'break-all' }}>View PDF</span>
+                              </a>
+                            ) : (
+                              <img src={setting.value} alt="Preview" style={{ width: '100%', height: 90, objectFit: 'contain', background: isHeroImage ? '#0d1e52' : '#f5f5f5', borderRadius: 6 }} />
+                            )}
                           </div>
                         )}
                       </div>

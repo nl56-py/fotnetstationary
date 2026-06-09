@@ -3822,6 +3822,53 @@ ul { list-style: disc; }
   transform: translateY(-1px);
 }
 
+.notice-popup-text {
+  margin: 0 0 15px 0;
+  text-align: center;
+}
+
+.notice-popup-media {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.notice-popup-img {
+  max-width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #ededed;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.notice-pdf-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #c61a1a;
+  color: #ffffff !important;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(198, 26, 26, 0.2);
+}
+
+.notice-pdf-button:hover {
+  background-color: #a81313;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(198, 26, 26, 0.3);
+}
+
+.notice-pdf-button i {
+  font-size: 16px;
+}
+
 /* ---- Responsive styles for WhatsApp and Reviews ---- */
 @media (max-width: 767px) {
   .reviews-header-block {

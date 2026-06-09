@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 export default function NoticePopup() {
   const [isOpen, setIsOpen] = useState(false)
   const [noticeText, setNoticeText] = useState('')
+  const [noticeImageUrl, setNoticeImageUrl] = useState('')
 
   useEffect(() => {
     async function checkNotice() {
@@ -13,16 +14,20 @@ export default function NoticePopup() {
         const { data, error } = await supabase
           .from('site_settings')
           .select('key, value')
-          .in('key', ['banner_notice_active', 'banner_notice_text'])
+          .in('key', ['banner_notice_active', 'banner_notice_text', 'banner_notice_image_url'])
 
         if (error) throw error
 
         const activeSetting = data?.find((s) => s.key === 'banner_notice_active')
         const textSetting = data?.find((s) => s.key === 'banner_notice_text')
+        const imageSetting = data?.find((s) => s.key === 'banner_notice_image_url')
 
         if (activeSetting && activeSetting.value === 'true' && textSetting && textSetting.value) {
           const text = textSetting.value
           setNoticeText(text)
+          if (imageSetting && imageSetting.value) {
+            setNoticeImageUrl(imageSetting.value)
+          }
 
           // Check localStorage to see if user dismissed it recently
           const lastDismissed = localStorage.getItem('fonet_notice_dismissed_time')
@@ -71,7 +76,27 @@ export default function NoticePopup() {
           <h3>IMPORTANT NOTICE</h3>
         </div>
         <div className="notice-popup-body">
-          <p>{noticeText}</p>
+          <p className="notice-popup-text">{noticeText}</p>
+          {noticeImageUrl && (
+            <div className="notice-popup-media">
+              {noticeImageUrl.toLowerCase().split('?')[0].endsWith('.pdf') ? (
+                <a
+                  href={noticeImageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="notice-pdf-button"
+                >
+                  <i className="fa fa-file-pdf-o"></i> View Attached PDF Document
+                </a>
+              ) : (
+                <img
+                  src={noticeImageUrl}
+                  alt="Announcement banner"
+                  className="notice-popup-img"
+                />
+              )}
+            </div>
+          )}
         </div>
         <div className="notice-popup-footer">
           <button className="notice-popup-action-btn" onClick={handleClose}>
