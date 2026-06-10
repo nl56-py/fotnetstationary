@@ -3,10 +3,13 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { BlogPost } from '@/lib/types'
 import Link from 'next/link'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 export default function AdminBlogs() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
 
@@ -62,7 +65,7 @@ export default function AdminBlogs() {
               </tr>
             </thead>
             <tbody>
-              {posts.map((post) => (
+              {posts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((post) => (
                 <tr key={post.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
                   <td style={{ padding: '12px 15px', fontSize: 14, fontWeight: 600 }}>
                     <Link href={`/admin/blogs/${post.id}`} style={{ color: '#222' }}>{post.title}</Link>
@@ -92,6 +95,12 @@ export default function AdminBlogs() {
           </table>
         )}
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={posts.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

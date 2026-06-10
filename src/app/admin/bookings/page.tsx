@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Booking } from '@/lib/types'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 const statusOptions = ['pending', 'in_progress', 'completed', 'cancelled']
 
@@ -9,6 +10,8 @@ export default function AdminBookings() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
 
@@ -21,7 +24,7 @@ export default function AdminBookings() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchBookings() }, [filter])
+  useEffect(() => { setCurrentPage(1); fetchBookings() }, [filter])
 
   const updateStatus = async (id: string, status: string) => {
     await supabase.from('bookings').update({ status, updated_at: new Date().toISOString() }).eq('id', id)
@@ -32,6 +35,7 @@ export default function AdminBookings() {
 
   return (
     <div>
+      {(() => { const paginatedBookings = bookings.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE); return (<>
       <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
         {['all', ...statusOptions].map((s) => (
           <button key={s} onClick={() => setFilter(s)} style={{
@@ -59,7 +63,7 @@ export default function AdminBookings() {
               </tr>
             </thead>
             <tbody>
-              {bookings.map((b) => (
+              {paginatedBookings.map((b) => (
                 <tr key={b.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
                   <td style={{ padding: '12px 15px', fontSize: 14, fontWeight: 600 }}>{b.customer_name}</td>
                   <td style={{ padding: '12px 15px', fontSize: 14 }}>{b.customer_phone}</td>
@@ -81,6 +85,13 @@ export default function AdminBookings() {
           </table>
         )}
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={bookings.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
+      </>); })()}
     </div>
   )
 }

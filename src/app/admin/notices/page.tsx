@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 interface NoticeDownloadItem {
   id: string
@@ -28,6 +29,8 @@ export default function AdminNotices() {
   const [isActive, setIsActive] = useState(true)
   const [uploadFile, setUploadFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
 
@@ -258,7 +261,7 @@ export default function AdminNotices() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
+            {items.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((item) => (
               <tr key={item.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
                 <td style={{ padding: '12px 15px' }}>
                   <span style={{
@@ -300,6 +303,12 @@ export default function AdminNotices() {
           </tbody>
         </table>
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={items.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

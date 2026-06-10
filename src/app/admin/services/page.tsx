@@ -2,12 +2,15 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Service } from '@/lib/types'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 export default function AdminServices() {
   const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Service | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
   const [form, setForm] = useState({
     title: '', slug: '', description: '', long_description: '', icon: 'fa fa-print',
     image_url: '', features: '', sort_order: 0,
@@ -175,9 +178,9 @@ export default function AdminServices() {
             </tr>
           </thead>
           <tbody>
-            {services.map((s, idx) => (
+            {services.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((s, idx) => (
               <tr key={s.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                <td style={{ padding: '12px 15px', fontSize: 14, color: '#888' }}>{idx + 1}</td>
+                <td style={{ padding: '12px 15px', fontSize: 14, color: '#888' }}>{(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}</td>
                 <td style={{ padding: '12px 15px' }}>
                   {s.image_url ? (
                     <img src={s.image_url} alt={s.title} style={{ width: 50, height: 35, objectFit: 'cover', borderRadius: 4 }} />
@@ -207,6 +210,12 @@ export default function AdminServices() {
           </tbody>
         </table>
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={services.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

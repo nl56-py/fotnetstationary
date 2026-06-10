@@ -2,10 +2,13 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { ContactSubmission } from '@/lib/types'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 export default function AdminMessages() {
   const [messages, setMessages] = useState<ContactSubmission[]>([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
 
@@ -43,7 +46,7 @@ export default function AdminMessages() {
           <div style={{ background: '#fff', borderRadius: 12, padding: 40, textAlign: 'center', color: '#888' }}>
             No messages yet
           </div>
-        ) : messages.map((msg) => (
+        ) : messages.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((msg) => (
           <div key={msg.id} style={{
             background: '#fff', borderRadius: 12, padding: 20, boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
             borderLeft: msg.is_read ? '4px solid #e0e0e0' : '4px solid #3347B0',
@@ -77,6 +80,12 @@ export default function AdminMessages() {
           </div>
         ))}
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={messages.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

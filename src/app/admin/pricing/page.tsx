@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { PricingItem } from '@/lib/types'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 export default function AdminPricing() {
   const [items, setItems] = useState<PricingItem[]>([])
@@ -11,6 +12,8 @@ export default function AdminPricing() {
   
   const [showAdd, setShowAdd] = useState(false)
   const [newItem, setNewItem] = useState({ sn: 1, service_name: '', category: 'PRINT AND PHOTOCOPY', price: '', notes: '' })
+  const [categoryPages, setCategoryPages] = useState<Record<string, number>>({})
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
   const categories = ['STATIONARY', 'PRINT AND PHOTOCOPY', 'OTHERS']
@@ -159,7 +162,7 @@ export default function AdminPricing() {
               </tr>
             </thead>
             <tbody>
-              {group.items.map(item => (
+              {(() => { const catPage = categoryPages[group.category] || 1; const paginatedItems = group.items.slice((catPage - 1) * ITEMS_PER_PAGE, catPage * ITEMS_PER_PAGE); return paginatedItems.map(item => (
                 <tr key={item.id} style={{ borderBottom: '1px solid #f5f5f5', background: editingId === item.id ? '#fcfdff' : 'transparent' }}>
                   {editingId === item.id && editingItem ? (
                     <>
@@ -205,9 +208,17 @@ export default function AdminPricing() {
                     </>
                   )}
                 </tr>
-              ))}
+              )); })()}
             </tbody>
           </table>
+          {group.items.length > ITEMS_PER_PAGE && (
+            <AdminPagination
+              currentPage={categoryPages[group.category] || 1}
+              totalItems={group.items.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              onPageChange={(page) => setCategoryPages(prev => ({ ...prev, [group.category]: page }))}
+            />
+          )}
         </div>
       ))}
     </div>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 /** Allowed MIME types for admin uploads. */
 const ALLOWED_MIME_TYPES = new Set([
@@ -21,6 +22,14 @@ const ALLOWED_FOLDERS = new Set(['services', 'blogs', 'notices', 'gallery', 'gen
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify the user is authenticated before allowing admin uploads
+    const supabaseAuth = await createServerSupabaseClient()
+    const { data: { user } } = await supabaseAuth.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const formData = await request.formData()
     const file = formData.get('file') as File | null
     const folder = (formData.get('folder') as string) || 'general'

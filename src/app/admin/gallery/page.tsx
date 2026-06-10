@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { GalleryImage } from '@/lib/types'
 import { getImageSrc } from '@/lib/media-helper'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 interface GalleryForm {
   title: string
@@ -41,6 +42,8 @@ export default function AdminGallery() {
   const [uploadPreview, setUploadPreview] = useState('')
   const [editUploadPreview, setEditUploadPreview] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
 
@@ -366,7 +369,7 @@ export default function AdminGallery() {
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 20 }}>
-        {images.map((img) => (
+        {images.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((img) => (
           <div key={img.id} style={{
             background: '#fff', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', position: 'relative',
             display: 'flex', flexDirection: 'column', border: '1px solid #f0f0f0'
@@ -397,6 +400,12 @@ export default function AdminGallery() {
           </div>
         ))}
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={images.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

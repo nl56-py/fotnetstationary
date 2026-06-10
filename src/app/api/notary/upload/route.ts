@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     if (uploadError) {
       console.error('Storage upload error:', uploadError)
       return NextResponse.json(
-        { error: 'File upload failed' },
+        { error: uploadError.message || 'File upload failed' },
         { status: 500 }
       )
     }

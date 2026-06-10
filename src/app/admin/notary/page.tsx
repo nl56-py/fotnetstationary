@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 interface NotaryRequest {
   id: string
@@ -26,6 +27,8 @@ export default function AdminNotaryRequests() {
   const [filter, setFilter] = useState('all')
   const [editingNotesId, setEditingNotesId] = useState<string | null>(null)
   const [notesTemp, setNotesTemp] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
 
@@ -38,6 +41,7 @@ export default function AdminNotaryRequests() {
   }
 
   useEffect(() => {
+    setCurrentPage(1)
     fetchRequests()
   }, [filter])
 
@@ -101,7 +105,7 @@ export default function AdminNotaryRequests() {
                 </tr>
               </thead>
               <tbody>
-                {requests.map((r) => (
+                {requests.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((r) => (
                   <tr key={r.id} style={{ borderBottom: '1px solid #f0f0f0', verticalAlign: 'top' }}>
                     <td style={{ padding: '15px', fontSize: 14 }}>
                       <div style={{ fontWeight: 600 }}>{r.customer_name}</div>
@@ -252,6 +256,12 @@ export default function AdminNotaryRequests() {
           </div>
         )}
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={requests.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

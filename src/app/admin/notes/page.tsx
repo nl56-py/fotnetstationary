@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import RichTextEditor from '@/components/ui/RichTextEditor'
 import type { StudyNote } from '@/lib/types'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 const defaultSubjects = ['Computer Science', 'English', 'Mathematics', 'Nepali', 'Science', 'Business Studies', 'Accountancy', 'Social Studies']
 const defaultClassLevels = ['Class 10 (SEE)', 'Class 11', 'Class 12', 'Bachelor', 'Master']
@@ -50,6 +51,8 @@ export default function AdminNotes() {
   const [isActive, setIsActive] = useState(true)
   const [uploadFile, setUploadFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
 
@@ -331,7 +334,7 @@ export default function AdminNotes() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
+            {items.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((item) => (
               <tr key={item.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
                 <td style={{ padding: '12px 15px', fontSize: 13 }}>
                   <span style={{ background: '#eef1ff', color: '#3347B0', padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600 }}>{item.class_level || 'General'}</span>
@@ -378,6 +381,12 @@ export default function AdminNotes() {
           </tbody>
         </table>
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={items.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

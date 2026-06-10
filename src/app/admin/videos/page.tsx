@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getVideoEmbedInfo } from '@/lib/media-helper'
+import AdminPagination from '@/components/ui/AdminPagination'
 
 interface VideoItem {
   id: string
@@ -21,6 +22,8 @@ export default function AdminVideos() {
   const [editingVideo, setEditingVideo] = useState<Partial<VideoItem> | null>(null)
   
   const [form, setForm] = useState({ title: '', video_url: '', description: '', is_active: true, sort_order: 0 })
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 20
 
   const supabase = createClient()
 
@@ -290,7 +293,7 @@ export default function AdminVideos() {
               </tr>
             </thead>
             <tbody>
-              {videos.map((video) => (
+              {videos.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((video) => (
                 <tr key={video.id} style={{ borderBottom: '1px solid #f0f0f0', background: editingId === video.id ? '#fcfdff' : 'transparent' }}>
                   <td style={{ padding: '12px 20px', fontSize: 14, color: '#555' }}>{video.sort_order}</td>
                   <td style={{ padding: '12px 20px', fontSize: 14, fontWeight: 600, color: '#333' }}>{video.title}</td>
@@ -320,6 +323,12 @@ export default function AdminVideos() {
           </table>
         )}
       </div>
+      <AdminPagination
+        currentPage={currentPage}
+        totalItems={videos.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

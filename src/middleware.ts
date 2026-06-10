@@ -8,6 +8,18 @@ export async function middleware(request: NextRequest) {
     },
   })
 
+  const pathname = request.nextUrl.pathname
+
+  // Skip auth for public API routes — these don't need authentication
+  const isPublicApiRoute =
+    pathname.startsWith('/api/notary') ||
+    pathname.startsWith('/api/contact') ||
+    pathname.startsWith('/api/booking')
+
+  if (isPublicApiRoute) {
+    return supabaseResponse
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -46,15 +58,22 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone()
 
   // Protect /admin routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user && !request.nextUrl.pathname.startsWith('/admin/login')) {
+  if (pathname.startsWith('/admin')) {
+    if (!user && !pathname.startsWith('/admin/login')) {
       url.pathname = '/admin/login'
       return NextResponse.redirect(url)
     }
 
-    if (user && request.nextUrl.pathname.startsWith('/admin/login')) {
+    if (user && pathname.startsWith('/admin/login')) {
       url.pathname = '/admin'
       return NextResponse.redirect(url)
+    }
+  }
+
+  // Protect /api/admin routes
+  if (pathname.startsWith('/api/admin')) {
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
   }
 
