@@ -147,3 +147,14 @@ export interface TeamMember {
 
 // Settings helper type
 export type SiteSettings = Record<string, string>
+
+export interface PopupBanner {
+  id: string
+  title: string
+  content: string | null
+  image_url: string | null
+  sort_order: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}

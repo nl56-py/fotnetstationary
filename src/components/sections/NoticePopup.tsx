@@ -1,87 +1,138 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import type { PopupBanner } from '@/lib/types'
+
+const DISMISS_STORAGE_KEY = 'fonet_popup_banners_dismissed'
+const DISMISS_EXPIRY_MS = 24 * 60 * 60 * 1000 // 24 hours
+
+interface DismissedRecord {
+  [bannerId: string]: number // timestamp when dismissed
+}
+
+function getDismissedBanners(): DismissedRecord {
+  try {
+    const raw = localStorage.getItem(DISMISS_STORAGE_KEY)
+    if (!raw) return {}
+    const parsed: DismissedRecord = JSON.parse(raw)
+    // Clean up expired entries
+    const now = Date.now()
+    const cleaned: DismissedRecord = {}
+    for (const [id, time] of Object.entries(parsed)) {
+      if (now - time < DISMISS_EXPIRY_MS) {
+        cleaned[id] = time
+      }
+    }
+    return cleaned
+  } catch {
+    return {}
+  }
+}
+
+function dismissBanner(bannerId: string) {
+  const dismissed = getDismissedBanners()
+  dismissed[bannerId] = Date.now()
+  localStorage.setItem(DISMISS_STORAGE_KEY, JSON.stringify(dismissed))
+}
 
 export default function NoticePopup() {
+  const [banners, setBanners] = useState<PopupBanner[]>([])
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
-  const [noticeText, setNoticeText] = useState('')
-  const [noticeImageUrl, setNoticeImageUrl] = useState('')
+  const [animClass, setAnimClass] = useState('animate__zoomIn')
 
   useEffect(() => {
-    async function checkNotice() {
+    async function loadBanners() {
       try {
         const supabase = createClient()
         const { data, error } = await supabase
-          .from('site_settings')
-          .select('key, value')
-          .in('key', ['banner_notice_active', 'banner_notice_text', 'banner_notice_image_url'])
+          .from('popup_banners')
+          .select('*')
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true })
 
         if (error) throw error
+        if (!data || data.length === 0) return
 
-        const activeSetting = data?.find((s) => s.key === 'banner_notice_active')
-        const textSetting = data?.find((s) => s.key === 'banner_notice_text')
-        const imageSetting = data?.find((s) => s.key === 'banner_notice_image_url')
+        // Filter out already-dismissed banners
+        const dismissed = getDismissedBanners()
+        const undismissed = data.filter(b => !dismissed[b.id])
 
-        if (activeSetting && activeSetting.value === 'true' && textSetting && textSetting.value) {
-          const text = textSetting.value
-          setNoticeText(text)
-          if (imageSetting && imageSetting.value) {
-            setNoticeImageUrl(imageSetting.value)
-          }
+        if (undismissed.length === 0) return
 
-          // Check localStorage to see if user dismissed it recently
-          const lastDismissed = localStorage.getItem('fonet_notice_dismissed_time')
-          const savedText = localStorage.getItem('fonet_notice_dismissed_text')
-          
-          if (lastDismissed && savedText === text) {
-            const timeDiff = Date.now() - parseInt(lastDismissed)
-            const twentyFourHours = 24 * 60 * 60 * 1000
-            if (timeDiff < twentyFourHours) {
-              // Dismissed within last 24 hours, don't show
-              return
-            }
-          }
-          
-          // Show popup after a short delay (1.5 seconds)
-          const timer = setTimeout(() => {
-            setIsOpen(true)
-          }, 1500)
-          return () => clearTimeout(timer)
-        }
+        setBanners(undismissed)
+        setCurrentIndex(0)
+
+        // Show first banner after a short delay
+        const timer = setTimeout(() => {
+          setIsOpen(true)
+        }, 1500)
+        return () => clearTimeout(timer)
       } catch (err) {
-        console.error('Failed to load popup banner setting', err)
+        console.error('Failed to load popup banners', err)
       }
     }
-    checkNotice()
+    loadBanners()
   }, [])
 
-  const handleClose = () => {
-    setIsOpen(false)
-    localStorage.setItem('fonet_notice_dismissed_time', Date.now().toString())
-    localStorage.setItem('fonet_notice_dismissed_text', noticeText)
-  }
+  const handleClose = useCallback(() => {
+    const currentBanner = banners[currentIndex]
+    if (currentBanner) {
+      dismissBanner(currentBanner.id)
+    }
 
-  if (!isOpen) return null
+    // Check if there's a next banner
+    const nextIndex = currentIndex + 1
+    if (nextIndex < banners.length) {
+      // Animate out, then show next
+      setAnimClass('animate__zoomOut')
+      setTimeout(() => {
+        setCurrentIndex(nextIndex)
+        setAnimClass('animate__zoomIn')
+      }, 300)
+    } else {
+      // No more banners, close the overlay
+      setAnimClass('animate__zoomOut')
+      setTimeout(() => {
+        setIsOpen(false)
+      }, 300)
+    }
+  }, [banners, currentIndex])
+
+  if (!isOpen || banners.length === 0) return null
+
+  const banner = banners[currentIndex]
+  if (!banner) return null
+
+  const totalCount = banners.length
+  const currentNumber = currentIndex + 1
 
   return (
     <div className="notice-popup-overlay" onClick={handleClose}>
-      <div className="notice-popup-content animate__animated animate__zoomIn" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`notice-popup-content animate__animated ${animClass}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="notice-popup-close-btn" onClick={handleClose}>
           &times;
         </button>
+
         <div className="notice-popup-header">
           <div className="notice-bell-container">
             <i className="fa fa-bell-o notice-bell-icon"></i>
           </div>
-          <h3>IMPORTANT NOTICE</h3>
+          <h3>{banner.title || 'IMPORTANT NOTICE'}</h3>
         </div>
+
         <div className="notice-popup-body">
-          <p className="notice-popup-text">{noticeText}</p>
-          {noticeImageUrl && (
+          {banner.content && (
+            <p className="notice-popup-text">{banner.content}</p>
+          )}
+          {banner.image_url && (
             <div className="notice-popup-media">
-              {noticeImageUrl.toLowerCase().split('?')[0].endsWith('.pdf') ? (
+              {banner.image_url.toLowerCase().split('?')[0].endsWith('.pdf') ? (
                 <a
-                  href={noticeImageUrl}
+                  href={banner.image_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="notice-pdf-button"
@@ -90,17 +141,26 @@ export default function NoticePopup() {
                 </a>
               ) : (
                 <img
-                  src={noticeImageUrl}
-                  alt="Announcement banner"
+                  src={banner.image_url}
+                  alt={banner.title || 'Announcement banner'}
                   className="notice-popup-img"
                 />
               )}
             </div>
           )}
         </div>
+
         <div className="notice-popup-footer">
+          {totalCount > 1 && (
+            <div className="notice-popup-counter">
+              <span>{currentNumber}</span> of <span>{totalCount}</span> announcements
+            </div>
+          )}
           <button className="notice-popup-action-btn" onClick={handleClose}>
-            Acknowledge & Close
+            {currentNumber < totalCount ? 'Next Announcement' : 'Acknowledge & Close'}
+            {currentNumber < totalCount && (
+              <i className="fa fa-arrow-right" style={{ marginLeft: 8, fontSize: 12 }}></i>
+            )}
           </button>
         </div>
       </div>

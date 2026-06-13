@@ -16,7 +16,7 @@ const sidebarItems = [
   { label: 'Bookings', icon: 'fa fa-calendar-check-o', href: '/admin/bookings' },
   { label: 'Videos', icon: 'fa fa-video-camera', href: '/admin/videos' },
   { label: 'Messages', icon: 'fa fa-envelope', href: '/admin/messages' },
-  { label: 'Notice Popup', icon: 'fa fa-bell', href: '/admin/popup-notice' },
+  { label: 'Popup Banners', icon: 'fa fa-bell', href: '/admin/popup-notice' },
   { label: 'Settings', icon: 'fa fa-sliders', href: '/admin/settings' },
 ]
 
